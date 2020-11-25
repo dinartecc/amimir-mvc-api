@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AmimirAPICarlos.Models;
+using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -39,6 +40,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutAnime(int id, Anime anime)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,6 +80,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Anime))]
         public IHttpActionResult PostAnime(Anime anime)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -96,6 +107,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Anime))]
         public IHttpActionResult DeleteAnime(int id)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             Anime anime = db.Anime.Find(id);
             if (anime == null)
             {

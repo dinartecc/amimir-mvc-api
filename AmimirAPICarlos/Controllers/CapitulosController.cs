@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AmimirAPICarlos.Models;
+using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -39,6 +40,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutCapitulo(int id, Capitulo capitulo)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,6 +80,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Capitulo))]
         public IHttpActionResult PostCapitulo(Capitulo capitulo)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -89,6 +100,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Capitulo))]
         public IHttpActionResult DeleteCapitulo(int id)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             Capitulo capitulo = db.Capitulo.Find(id);
             if (capitulo == null)
             {

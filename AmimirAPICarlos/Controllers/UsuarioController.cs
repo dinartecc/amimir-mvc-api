@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AmimirAPICarlos.Models;
+using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -18,15 +19,25 @@ namespace AmimirAPICarlos.Controllers
         private AmimirEntities1 db = new AmimirEntities1();
 
         // GET: api/Usuario
-        public IQueryable<Usuario> GetUsuarios()
+        public IHttpActionResult GetUsuarios()
         {
-            return db.Usuario;
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
+            return Ok(db.Usuario);
         }
 
         // GET: api/Usuario/5
         [ResponseType(typeof(Usuario))]
         public IHttpActionResult GetUsuario(int id)
         {
+            if (!AdminValidator() && !isOwnUsername(id))
+            {
+                return Unauthorized();
+            }
+
             Usuario usuario = db.Usuario.Find(id);
             if (usuario == null)
             {
@@ -40,6 +51,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutUsuario(int id, Usuario usuario)
         {
+            if (!AdminValidator() || !isOwnUsername(id))
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -49,6 +65,8 @@ namespace AmimirAPICarlos.Controllers
             {
                 return BadRequest();
             }
+
+            usuario.Contrasena = sha256(usuario.Contrasena);
 
             db.Entry(usuario).State = EntityState.Modified;
 
@@ -75,6 +93,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Usuario))]
         public IHttpActionResult PostUsuario(Usuario usuario)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -90,6 +113,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Usuario))]
         public IHttpActionResult DeleteUsuario(int id)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             Usuario usuario = db.Usuario.Find(id);
             if (usuario == null)
             {
@@ -107,6 +135,36 @@ namespace AmimirAPICarlos.Controllers
             }
 
             return Ok(usuario);
+        }
+
+        [HttpPost]
+        public IHttpActionResult Reset(int id)
+        {
+            if(!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
+            Usuario usuario = db.Usuario.Find(id);
+            
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.Contrasena = "password";
+            db.Entry(usuario).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Threading;
+using System.Security.Claims;
+
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -19,6 +22,24 @@ namespace AmimirAPICarlos.Controllers
                 hash += theByte.ToString("x2");
             }
             return hash;
+        }
+
+        public static Boolean AdminValidator()
+        {
+            var principal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var isAdmin = principal.Claims.Where(c => c.Type == "isAdmin").Select(c => c.Value).SingleOrDefault();
+
+            return isAdmin == "True";
+        }
+
+        public static Boolean isOwnUsername( int userID )
+        {
+            var principal = (ClaimsPrincipal)Thread.CurrentPrincipal;
+
+            var claimUserID = principal.Claims.Where(c => c.Type == "userID").Select(c => c.Value).SingleOrDefault();
+
+            return claimUserID == userID.ToString();
         }
     }
 }

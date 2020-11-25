@@ -1,7 +1,3 @@
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPI.csprojAssemblyReference.cache
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPI.csproj.CoreCompileInputs.cache
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPICarlos.dll
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPICarlos.pdb
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\AmimirAPICarlos.dll.config
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\AmimirAPICarlos.dll
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\AmimirAPICarlos.pdb
@@ -64,6 +60,7 @@ C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.Identi
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Newtonsoft.Json.dll
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.dll
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Net.Http.Formatting.dll
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Web.Helpers.dll
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Web.Http.dll
@@ -81,6 +78,8 @@ C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.Identi
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.IdentityModel.Logging.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.IdentityModel.Tokens.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.IdentityModel.Tokens.Jwt.xml
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.pdb
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Newtonsoft.Json.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Net.Http.Formatting.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Web.Helpers.xml
@@ -94,7 +93,8 @@ C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Web.WebPa
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Web.WebPages.Razor.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Antlr3.Runtime.pdb
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPI.csprojAssemblyReference.cache
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPI.csproj.CoreCompileInputs.cache
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPI.csproj.CopyComplete
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.dll
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.pdb
-C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.xml
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPICarlos.dll
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPICarlos.pdb

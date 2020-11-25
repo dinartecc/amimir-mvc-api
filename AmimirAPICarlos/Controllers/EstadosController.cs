@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AmimirAPICarlos.Models;
+using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -65,6 +66,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutEstado(int id, Estado estado)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -100,6 +106,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Estado))]
         public IHttpActionResult PostEstado(Estado estado)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -115,6 +126,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Estado))]
         public IHttpActionResult DeleteEstado(int id)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             Estado estado = db.Estado.Find(id);
             if (estado == null)
             {

@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AmimirAPICarlos.Models;
+using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -39,6 +40,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutGenero(int id, Genero genero)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,6 +80,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Genero))]
         public IHttpActionResult PostGenero(Genero genero)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -89,6 +100,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Genero))]
         public IHttpActionResult DeleteGenero(int id)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             Genero genero = db.Genero.Find(id);
             if (genero == null)
             {

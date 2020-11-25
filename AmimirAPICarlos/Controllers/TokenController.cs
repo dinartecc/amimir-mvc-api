@@ -29,7 +29,7 @@ namespace AmimirAPICarlos.Controllers
 
             var usuario = (from s in db.Usuario where s.Contrasena == encrypted && s.Username == user.Username select s).FirstOrDefault<Usuario>();
 
-            if (usuario != null && usuario.isAdmin)
+            if (usuario != null)
             {
                 var token = GenerateJWT(usuario);
 
@@ -62,7 +62,7 @@ namespace AmimirAPICarlos.Controllers
             var claims = new ClaimsIdentity(new[]
             {
                 new Claim("isAdmin", user.isAdmin.ToString()),
-                new Claim("username", user.Username),
+                new Claim("userID", user.ID.ToString()),
             });
 
             var jwtSecurityToken = tokenHandler.CreateJwtSecurityToken(

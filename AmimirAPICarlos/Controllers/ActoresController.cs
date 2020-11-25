@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AmimirAPICarlos.Models;
+using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
@@ -39,6 +40,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutActor(int id, Actor actor)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,6 +80,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Actor))]
         public IHttpActionResult PostActor(Actor actor)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -89,6 +100,11 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(Actor))]
         public IHttpActionResult DeleteActor(int id)
         {
+            if (!AdminValidator())
+            {
+                return Unauthorized();
+            }
+
             Actor actor = db.Actor.Find(id);
             if (actor == null)
             {
