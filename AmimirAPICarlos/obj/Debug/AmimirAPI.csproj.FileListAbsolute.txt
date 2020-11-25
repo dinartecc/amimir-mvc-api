@@ -95,3 +95,6 @@ C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Web.WebPa
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Antlr3.Runtime.pdb
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\obj\Debug\AmimirAPI.csproj.CopyComplete
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.dll
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.pdb
+C:\Users\vende\source\repos\AmimirAPICarlos\AmimirAPICarlos\bin\System.Linq.Dynamic.Core.xml

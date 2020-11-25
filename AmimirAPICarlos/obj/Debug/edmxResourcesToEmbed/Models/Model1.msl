@@ -37,5 +37,97 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Actor">
+      <EntityTypeMapping TypeName="AmimirModel.Actor">
+        <MappingFragment StoreEntitySet="Actor">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AnimeEstudio">
+      <EntityTypeMapping TypeName="AmimirModel.AnimeEstudio">
+        <MappingFragment StoreEntitySet="AnimeEstudio">
+          <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+          <ScalarProperty Name="EstudioID" ColumnName="EstudioID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AnimeGenero">
+      <EntityTypeMapping TypeName="AmimirModel.AnimeGenero">
+        <MappingFragment StoreEntitySet="AnimeGenero">
+          <ScalarProperty Name="GeneroID" ColumnName="GeneroID" />
+          <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Capitulo">
+      <EntityTypeMapping TypeName="AmimirModel.Capitulo">
+        <MappingFragment StoreEntitySet="Capitulo">
+          <ScalarProperty Name="URL" ColumnName="URL" />
+          <ScalarProperty Name="FechaPublicado" ColumnName="FechaPublicado" />
+          <ScalarProperty Name="Sinopsis" ColumnName="Sinopsis" />
+          <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+          <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+          <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Estado">
+      <EntityTypeMapping TypeName="AmimirModel.Estado">
+        <MappingFragment StoreEntitySet="Estado">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Estudio">
+      <EntityTypeMapping TypeName="AmimirModel.Estudio">
+        <MappingFragment StoreEntitySet="Estudio">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Genero">
+      <EntityTypeMapping TypeName="AmimirModel.Genero">
+        <MappingFragment StoreEntitySet="Genero">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NombreAlternativo">
+      <EntityTypeMapping TypeName="AmimirModel.NombreAlternativo">
+        <MappingFragment StoreEntitySet="NombreAlternativo">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Personajes">
+      <EntityTypeMapping TypeName="AmimirModel.Personajes">
+        <MappingFragment StoreEntitySet="Personajes">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="ActorID" ColumnName="ActorID" />
+          <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UrlAlternativo">
+      <EntityTypeMapping TypeName="AmimirModel.UrlAlternativo">
+        <MappingFragment StoreEntitySet="UrlAlternativo">
+          <ScalarProperty Name="URL" ColumnName="URL" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="CapituloID" ColumnName="CapituloID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

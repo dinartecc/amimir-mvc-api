@@ -4,10 +4,30 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="fd93d2b646cb48e8a55e98e5c9873390" Name="Diagram1">
-        <EntityTypeShape EntityType="AmimirModel.Anime" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="fd93d2b646cb48e8a55e98e5c9873390" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="AmimirModel.Anime" Width="1.5" PointX="3.25" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AmimirModel.Paquete" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="AmimirModel.Usuario" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AmimirModel.Usuario" Width="1.5" PointX="8.125" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AmimirModel.Actor" Width="1.5" PointX="10.75" PointY="6.875" />
+        <EntityTypeShape EntityType="AmimirModel.AnimeEstudio" Width="1.5" PointX="5.75" PointY="5.375" />
+        <EntityTypeShape EntityType="AmimirModel.AnimeGenero" Width="1.5" PointX="0.625" PointY="4.75" />
+        <EntityTypeShape EntityType="AmimirModel.Capitulo" Width="1.5" PointX="5" PointY="9.5" />
+        <EntityTypeShape EntityType="AmimirModel.Estado" Width="1.5" PointX="1" PointY="7.625" />
+        <EntityTypeShape EntityType="AmimirModel.Estudio" Width="1.5" PointX="5.75" PointY="3.25" />
+        <EntityTypeShape EntityType="AmimirModel.Genero" Width="1.5" PointX="1.125" PointY="9.875" />
+        <EntityTypeShape EntityType="AmimirModel.NombreAlternativo" Width="1.5" PointX="2.875" PointY="11.375" />
+        <EntityTypeShape EntityType="AmimirModel.Personajes" Width="1.5" PointX="7.875" PointY="6.75" />
+        <EntityTypeShape EntityType="AmimirModel.UrlAlternativo" Width="1.5" PointX="7.5" PointY="9.625" />
+        <AssociationConnector Association="AmimirModel.FK__Personaje__Actor__412EB0B6" />
+        <AssociationConnector Association="AmimirModel.FK__Anime__EstadoID__3B75D760" />
+        <AssociationConnector Association="AmimirModel.FK__AnimeEstu__Anime__49C3F6B7" />
+        <AssociationConnector Association="AmimirModel.FK__AnimeGene__Anime__4E88ABD4" />
+        <AssociationConnector Association="AmimirModel.FK__Capitulo__AnimeI__52593CB8" />
+        <AssociationConnector Association="AmimirModel.FK__NombreAlt__Anime__440B1D61" />
+        <AssociationConnector Association="AmimirModel.FK__Personaje__Anime__403A8C7D" />
+        <AssociationConnector Association="AmimirModel.FK__AnimeEstu__Estud__48CFD27E" />
+        <AssociationConnector Association="AmimirModel.FK__AnimeGene__Gener__4F7CD00D" />
+        <AssociationConnector Association="AmimirModel.FK__UrlAltern__Capit__5535A963" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

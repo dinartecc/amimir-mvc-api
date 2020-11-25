@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="AmimirModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Actor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Anime">
           <Key>
             <PropertyRef Name="ID" />
@@ -17,6 +24,63 @@
           <Property Name="Popularidad" Type="decimal" Precision="3" Scale="2" Nullable="false" />
           <Property Name="EstadoID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="AnimeEstudio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EstudioID" Type="int" Nullable="false" />
+          <Property Name="AnimeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AnimeGenero">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AnimeID" Type="int" Nullable="false" />
+          <Property Name="GeneroID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Capitulo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AnimeID" Type="int" Nullable="false" />
+          <Property Name="Titulo" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Duracion" Type="int" Nullable="false" />
+          <Property Name="Sinopsis" Type="varchar" MaxLength="400" Nullable="false" />
+          <Property Name="FechaPublicado" Type="datetime" Nullable="false" />
+          <Property Name="URL" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Estado">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Estudio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Genero">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NombreAlternativo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AnimeID" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Paquete">
           <Key>
             <PropertyRef Name="ID" />
@@ -25,6 +89,24 @@
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Duracion" Type="int" Nullable="false" />
           <Property Name="Precio" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Personajes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AnimeID" Type="int" Nullable="false" />
+          <Property Name="ActorID" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UrlAlternativo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CapituloID" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="URL" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="Usuario">
           <Key>
@@ -38,10 +120,180 @@
           <Property Name="Contrasena" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="isAdmin" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK__Anime__EstadoID__3B75D760">
+          <End Role="Estado" Type="Self.Estado" Multiplicity="1" />
+          <End Role="Anime" Type="Self.Anime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Anime">
+              <PropertyRef Name="EstadoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeEstu__Anime__49C3F6B7">
+          <End Role="Anime" Type="Self.Anime" Multiplicity="1" />
+          <End Role="AnimeEstudio" Type="Self.AnimeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeEstudio">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeEstu__Estud__48CFD27E">
+          <End Role="Estudio" Type="Self.Estudio" Multiplicity="1" />
+          <End Role="AnimeEstudio" Type="Self.AnimeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estudio">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeEstudio">
+              <PropertyRef Name="EstudioID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeGene__Anime__4E88ABD4">
+          <End Role="Anime" Type="Self.Anime" Multiplicity="1" />
+          <End Role="AnimeGenero" Type="Self.AnimeGenero" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeGenero">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeGene__Gener__4F7CD00D">
+          <End Role="Genero" Type="Self.Genero" Multiplicity="1" />
+          <End Role="AnimeGenero" Type="Self.AnimeGenero" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genero">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeGenero">
+              <PropertyRef Name="GeneroID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Capitulo__AnimeI__52593CB8">
+          <End Role="Anime" Type="Self.Anime" Multiplicity="1" />
+          <End Role="Capitulo" Type="Self.Capitulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Capitulo">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__NombreAlt__Anime__440B1D61">
+          <End Role="Anime" Type="Self.Anime" Multiplicity="1" />
+          <End Role="NombreAlternativo" Type="Self.NombreAlternativo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="NombreAlternativo">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Personaje__Actor__412EB0B6">
+          <End Role="Actor" Type="Self.Actor" Multiplicity="1" />
+          <End Role="Personajes" Type="Self.Personajes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Personajes">
+              <PropertyRef Name="ActorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Personaje__Anime__403A8C7D">
+          <End Role="Anime" Type="Self.Anime" Multiplicity="1" />
+          <End Role="Personajes" Type="Self.Personajes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Personajes">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UrlAltern__Capit__5535A963">
+          <End Role="Capitulo" Type="Self.Capitulo" Multiplicity="1" />
+          <End Role="UrlAlternativo" Type="Self.UrlAlternativo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Capitulo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UrlAlternativo">
+              <PropertyRef Name="CapituloID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="AmimirModelStoreContainer">
+          <EntitySet Name="Actor" EntityType="Self.Actor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Anime" EntityType="Self.Anime" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AnimeEstudio" EntityType="Self.AnimeEstudio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AnimeGenero" EntityType="Self.AnimeGenero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Capitulo" EntityType="Self.Capitulo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Estudio" EntityType="Self.Estudio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Genero" EntityType="Self.Genero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NombreAlternativo" EntityType="Self.NombreAlternativo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Paquete" EntityType="Self.Paquete" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Personajes" EntityType="Self.Personajes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UrlAlternativo" EntityType="Self.UrlAlternativo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Anime__EstadoID__3B75D760" Association="Self.FK__Anime__EstadoID__3B75D760">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="Anime" EntitySet="Anime" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeEstu__Anime__49C3F6B7" Association="Self.FK__AnimeEstu__Anime__49C3F6B7">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="AnimeEstudio" EntitySet="AnimeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeEstu__Estud__48CFD27E" Association="Self.FK__AnimeEstu__Estud__48CFD27E">
+            <End Role="Estudio" EntitySet="Estudio" />
+            <End Role="AnimeEstudio" EntitySet="AnimeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeGene__Anime__4E88ABD4" Association="Self.FK__AnimeGene__Anime__4E88ABD4">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="AnimeGenero" EntitySet="AnimeGenero" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeGene__Gener__4F7CD00D" Association="Self.FK__AnimeGene__Gener__4F7CD00D">
+            <End Role="Genero" EntitySet="Genero" />
+            <End Role="AnimeGenero" EntitySet="AnimeGenero" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Capitulo__AnimeI__52593CB8" Association="Self.FK__Capitulo__AnimeI__52593CB8">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="Capitulo" EntitySet="Capitulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__NombreAlt__Anime__440B1D61" Association="Self.FK__NombreAlt__Anime__440B1D61">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="NombreAlternativo" EntitySet="NombreAlternativo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Personaje__Actor__412EB0B6" Association="Self.FK__Personaje__Actor__412EB0B6">
+            <End Role="Actor" EntitySet="Actor" />
+            <End Role="Personajes" EntitySet="Personajes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Personaje__Anime__403A8C7D" Association="Self.FK__Personaje__Anime__403A8C7D">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="Personajes" EntitySet="Personajes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UrlAltern__Capit__5535A963" Association="Self.FK__UrlAltern__Capit__5535A963">
+            <End Role="Capitulo" EntitySet="Capitulo" />
+            <End Role="UrlAlternativo" EntitySet="UrlAlternativo" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -58,6 +310,12 @@
           <Property Name="Puntuacion" Type="Decimal" Precision="3" Scale="2" Nullable="false" />
           <Property Name="Popularidad" Type="Decimal" Precision="3" Scale="2" Nullable="false" />
           <Property Name="EstadoID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Estado" Relationship="AmimirModel.FK__Anime__EstadoID__3B75D760" FromRole="Anime" ToRole="Estado" />
+          <NavigationProperty Name="AnimeEstudio" Relationship="AmimirModel.FK__AnimeEstu__Anime__49C3F6B7" FromRole="Anime" ToRole="AnimeEstudio" />
+          <NavigationProperty Name="AnimeGenero" Relationship="AmimirModel.FK__AnimeGene__Anime__4E88ABD4" FromRole="Anime" ToRole="AnimeGenero" />
+          <NavigationProperty Name="Capitulo" Relationship="AmimirModel.FK__Capitulo__AnimeI__52593CB8" FromRole="Anime" ToRole="Capitulo" />
+          <NavigationProperty Name="NombreAlternativo" Relationship="AmimirModel.FK__NombreAlt__Anime__440B1D61" FromRole="Anime" ToRole="NombreAlternativo" />
+          <NavigationProperty Name="Personajes" Relationship="AmimirModel.FK__Personaje__Anime__403A8C7D" FromRole="Anime" ToRole="Personajes" />
         </EntityType>
         <EntityType Name="Paquete">
           <Key>
@@ -84,7 +342,273 @@
           <EntitySet Name="Anime" EntityType="Self.Anime" />
           <EntitySet Name="Paquete" EntityType="Self.Paquete" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+          <EntitySet Name="Actor" EntityType="AmimirModel.Actor" />
+          <EntitySet Name="AnimeEstudio" EntityType="AmimirModel.AnimeEstudio" />
+          <EntitySet Name="AnimeGenero" EntityType="AmimirModel.AnimeGenero" />
+          <EntitySet Name="Capitulo" EntityType="AmimirModel.Capitulo" />
+          <EntitySet Name="Estado" EntityType="AmimirModel.Estado" />
+          <EntitySet Name="Estudio" EntityType="AmimirModel.Estudio" />
+          <EntitySet Name="Genero" EntityType="AmimirModel.Genero" />
+          <EntitySet Name="NombreAlternativo" EntityType="AmimirModel.NombreAlternativo" />
+          <EntitySet Name="Personajes" EntityType="AmimirModel.Personajes" />
+          <EntitySet Name="UrlAlternativo" EntityType="AmimirModel.UrlAlternativo" />
+          <AssociationSet Name="FK__Personaje__Actor__412EB0B6" Association="AmimirModel.FK__Personaje__Actor__412EB0B6">
+            <End Role="Actor" EntitySet="Actor" />
+            <End Role="Personajes" EntitySet="Personajes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Anime__EstadoID__3B75D760" Association="AmimirModel.FK__Anime__EstadoID__3B75D760">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="Anime" EntitySet="Anime" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeEstu__Anime__49C3F6B7" Association="AmimirModel.FK__AnimeEstu__Anime__49C3F6B7">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="AnimeEstudio" EntitySet="AnimeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeGene__Anime__4E88ABD4" Association="AmimirModel.FK__AnimeGene__Anime__4E88ABD4">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="AnimeGenero" EntitySet="AnimeGenero" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Capitulo__AnimeI__52593CB8" Association="AmimirModel.FK__Capitulo__AnimeI__52593CB8">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="Capitulo" EntitySet="Capitulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__NombreAlt__Anime__440B1D61" Association="AmimirModel.FK__NombreAlt__Anime__440B1D61">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="NombreAlternativo" EntitySet="NombreAlternativo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Personaje__Anime__403A8C7D" Association="AmimirModel.FK__Personaje__Anime__403A8C7D">
+            <End Role="Anime" EntitySet="Anime" />
+            <End Role="Personajes" EntitySet="Personajes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeEstu__Estud__48CFD27E" Association="AmimirModel.FK__AnimeEstu__Estud__48CFD27E">
+            <End Role="Estudio" EntitySet="Estudio" />
+            <End Role="AnimeEstudio" EntitySet="AnimeEstudio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__AnimeGene__Gener__4F7CD00D" Association="AmimirModel.FK__AnimeGene__Gener__4F7CD00D">
+            <End Role="Genero" EntitySet="Genero" />
+            <End Role="AnimeGenero" EntitySet="AnimeGenero" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UrlAltern__Capit__5535A963" Association="AmimirModel.FK__UrlAltern__Capit__5535A963">
+            <End Role="Capitulo" EntitySet="Capitulo" />
+            <End Role="UrlAlternativo" EntitySet="UrlAlternativo" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Actor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Personajes" Relationship="AmimirModel.FK__Personaje__Actor__412EB0B6" FromRole="Actor" ToRole="Personajes" />
+        </EntityType>
+        <EntityType Name="AnimeEstudio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EstudioID" Type="Int32" Nullable="false" />
+          <Property Name="AnimeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__AnimeEstu__Anime__49C3F6B7" FromRole="AnimeEstudio" ToRole="Anime" />
+          <NavigationProperty Name="Estudio" Relationship="AmimirModel.FK__AnimeEstu__Estud__48CFD27E" FromRole="AnimeEstudio" ToRole="Estudio" />
+        </EntityType>
+        <EntityType Name="AnimeGenero">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AnimeID" Type="Int32" Nullable="false" />
+          <Property Name="GeneroID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__AnimeGene__Anime__4E88ABD4" FromRole="AnimeGenero" ToRole="Anime" />
+          <NavigationProperty Name="Genero" Relationship="AmimirModel.FK__AnimeGene__Gener__4F7CD00D" FromRole="AnimeGenero" ToRole="Genero" />
+        </EntityType>
+        <EntityType Name="Capitulo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AnimeID" Type="Int32" Nullable="false" />
+          <Property Name="Titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Duracion" Type="Int32" Nullable="false" />
+          <Property Name="Sinopsis" Type="String" Nullable="false" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="FechaPublicado" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="URL" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__Capitulo__AnimeI__52593CB8" FromRole="Capitulo" ToRole="Anime" />
+          <NavigationProperty Name="UrlAlternativo" Relationship="AmimirModel.FK__UrlAltern__Capit__5535A963" FromRole="Capitulo" ToRole="UrlAlternativo" />
+        </EntityType>
+        <EntityType Name="Estado">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__Anime__EstadoID__3B75D760" FromRole="Estado" ToRole="Anime" />
+        </EntityType>
+        <EntityType Name="Estudio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AnimeEstudio" Relationship="AmimirModel.FK__AnimeEstu__Estud__48CFD27E" FromRole="Estudio" ToRole="AnimeEstudio" />
+        </EntityType>
+        <EntityType Name="Genero">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AnimeGenero" Relationship="AmimirModel.FK__AnimeGene__Gener__4F7CD00D" FromRole="Genero" ToRole="AnimeGenero" />
+        </EntityType>
+        <EntityType Name="NombreAlternativo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AnimeID" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__NombreAlt__Anime__440B1D61" FromRole="NombreAlternativo" ToRole="Anime" />
+        </EntityType>
+        <EntityType Name="Personajes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AnimeID" Type="Int32" Nullable="false" />
+          <Property Name="ActorID" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Actor" Relationship="AmimirModel.FK__Personaje__Actor__412EB0B6" FromRole="Personajes" ToRole="Actor" />
+          <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__Personaje__Anime__403A8C7D" FromRole="Personajes" ToRole="Anime" />
+        </EntityType>
+        <EntityType Name="UrlAlternativo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CapituloID" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="URL" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Capitulo" Relationship="AmimirModel.FK__UrlAltern__Capit__5535A963" FromRole="UrlAlternativo" ToRole="Capitulo" />
+        </EntityType>
+        <Association Name="FK__Personaje__Actor__412EB0B6">
+          <End Type="AmimirModel.Actor" Role="Actor" Multiplicity="1" />
+          <End Type="AmimirModel.Personajes" Role="Personajes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Personajes">
+              <PropertyRef Name="ActorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Anime__EstadoID__3B75D760">
+          <End Type="AmimirModel.Estado" Role="Estado" Multiplicity="1" />
+          <End Type="AmimirModel.Anime" Role="Anime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Anime">
+              <PropertyRef Name="EstadoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeEstu__Anime__49C3F6B7">
+          <End Type="AmimirModel.Anime" Role="Anime" Multiplicity="1" />
+          <End Type="AmimirModel.AnimeEstudio" Role="AnimeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeEstudio">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeGene__Anime__4E88ABD4">
+          <End Type="AmimirModel.Anime" Role="Anime" Multiplicity="1" />
+          <End Type="AmimirModel.AnimeGenero" Role="AnimeGenero" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeGenero">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Capitulo__AnimeI__52593CB8">
+          <End Type="AmimirModel.Anime" Role="Anime" Multiplicity="1" />
+          <End Type="AmimirModel.Capitulo" Role="Capitulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Capitulo">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__NombreAlt__Anime__440B1D61">
+          <End Type="AmimirModel.Anime" Role="Anime" Multiplicity="1" />
+          <End Type="AmimirModel.NombreAlternativo" Role="NombreAlternativo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="NombreAlternativo">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Personaje__Anime__403A8C7D">
+          <End Type="AmimirModel.Anime" Role="Anime" Multiplicity="1" />
+          <End Type="AmimirModel.Personajes" Role="Personajes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Anime">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Personajes">
+              <PropertyRef Name="AnimeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeEstu__Estud__48CFD27E">
+          <End Type="AmimirModel.Estudio" Role="Estudio" Multiplicity="1" />
+          <End Type="AmimirModel.AnimeEstudio" Role="AnimeEstudio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estudio">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeEstudio">
+              <PropertyRef Name="EstudioID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__AnimeGene__Gener__4F7CD00D">
+          <End Type="AmimirModel.Genero" Role="Genero" Multiplicity="1" />
+          <End Type="AmimirModel.AnimeGenero" Role="AnimeGenero" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genero">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimeGenero">
+              <PropertyRef Name="GeneroID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UrlAltern__Capit__5535A963">
+          <End Type="AmimirModel.Capitulo" Role="Capitulo" Multiplicity="1" />
+          <End Type="AmimirModel.UrlAlternativo" Role="UrlAlternativo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Capitulo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UrlAlternativo">
+              <PropertyRef Name="CapituloID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -124,6 +648,98 @@
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="CorreoElectronico" ColumnName="CorreoElectronico" />
                 <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Actor">
+            <EntityTypeMapping TypeName="AmimirModel.Actor">
+              <MappingFragment StoreEntitySet="Actor">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AnimeEstudio">
+            <EntityTypeMapping TypeName="AmimirModel.AnimeEstudio">
+              <MappingFragment StoreEntitySet="AnimeEstudio">
+                <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+                <ScalarProperty Name="EstudioID" ColumnName="EstudioID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AnimeGenero">
+            <EntityTypeMapping TypeName="AmimirModel.AnimeGenero">
+              <MappingFragment StoreEntitySet="AnimeGenero">
+                <ScalarProperty Name="GeneroID" ColumnName="GeneroID" />
+                <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Capitulo">
+            <EntityTypeMapping TypeName="AmimirModel.Capitulo">
+              <MappingFragment StoreEntitySet="Capitulo">
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="FechaPublicado" ColumnName="FechaPublicado" />
+                <ScalarProperty Name="Sinopsis" ColumnName="Sinopsis" />
+                <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+                <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estado">
+            <EntityTypeMapping TypeName="AmimirModel.Estado">
+              <MappingFragment StoreEntitySet="Estado">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estudio">
+            <EntityTypeMapping TypeName="AmimirModel.Estudio">
+              <MappingFragment StoreEntitySet="Estudio">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Genero">
+            <EntityTypeMapping TypeName="AmimirModel.Genero">
+              <MappingFragment StoreEntitySet="Genero">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NombreAlternativo">
+            <EntityTypeMapping TypeName="AmimirModel.NombreAlternativo">
+              <MappingFragment StoreEntitySet="NombreAlternativo">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Personajes">
+            <EntityTypeMapping TypeName="AmimirModel.Personajes">
+              <MappingFragment StoreEntitySet="Personajes">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ActorID" ColumnName="ActorID" />
+                <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UrlAlternativo">
+            <EntityTypeMapping TypeName="AmimirModel.UrlAlternativo">
+              <MappingFragment StoreEntitySet="UrlAlternativo">
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="CapituloID" ColumnName="CapituloID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

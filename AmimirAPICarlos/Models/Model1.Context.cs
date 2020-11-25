@@ -28,5 +28,15 @@ namespace AmimirAPICarlos.Models
         public virtual DbSet<Anime> Anime { get; set; }
         public virtual DbSet<Paquete> Paquete { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<Actor> Actor { get; set; }
+        public virtual DbSet<AnimeEstudio> AnimeEstudio { get; set; }
+        public virtual DbSet<AnimeGenero> AnimeGenero { get; set; }
+        public virtual DbSet<Capitulo> Capitulo { get; set; }
+        public virtual DbSet<Estado> Estado { get; set; }
+        public virtual DbSet<Estudio> Estudio { get; set; }
+        public virtual DbSet<Genero> Genero { get; set; }
+        public virtual DbSet<NombreAlternativo> NombreAlternativo { get; set; }
+        public virtual DbSet<Personajes> Personajes { get; set; }
+        public virtual DbSet<UrlAlternativo> UrlAlternativo { get; set; }
     }
 }

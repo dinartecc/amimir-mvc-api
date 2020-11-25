@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
 using static AmimirAPICarlos.Controllers.Utils;
@@ -30,7 +31,7 @@ namespace AmimirAPICarlos.Controllers
 
             if (usuario != null && usuario.isAdmin)
             {
-                var token = GenerateJWT();
+                var token = GenerateJWT(usuario);
 
                 return Ok(token);
             }
@@ -42,7 +43,7 @@ namespace AmimirAPICarlos.Controllers
 
 
 
-        private Token GenerateJWT()
+        private Token GenerateJWT(Usuario user)
         {
             var now = DateTime.Now;
 
@@ -57,10 +58,18 @@ namespace AmimirAPICarlos.Controllers
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            var claims = new ClaimsIdentity(new[]
+            {
+                new Claim("isAdmin", user.isAdmin.ToString()),
+                new Claim("username", user.Username),
+            });
+
             var jwtSecurityToken = tokenHandler.CreateJwtSecurityToken(
                 audience: audienceToken,
                 issuer: issuerToken,
                 notBefore: now,
+                subject: claims,
                 expires: now.AddMinutes(Convert.ToInt32(expireTime)),
                 signingCredentials: signingCredentials);
 

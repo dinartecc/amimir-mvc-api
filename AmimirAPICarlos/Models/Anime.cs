@@ -14,6 +14,16 @@ namespace AmimirAPICarlos.Models
     
     public partial class Anime
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Anime()
+        {
+            this.AnimeEstudio = new HashSet<AnimeEstudio>();
+            this.AnimeGenero = new HashSet<AnimeGenero>();
+            this.Capitulo = new HashSet<Capitulo>();
+            this.NombreAlternativo = new HashSet<NombreAlternativo>();
+            this.Personajes = new HashSet<Personajes>();
+        }
+    
         public int ID { get; set; }
         public string Nombre { get; set; }
         public Nullable<System.DateTime> FechaEstreno { get; set; }
@@ -21,5 +31,17 @@ namespace AmimirAPICarlos.Models
         public decimal Puntuacion { get; set; }
         public decimal Popularidad { get; set; }
         public int EstadoID { get; set; }
+    
+        public virtual Estado Estado { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnimeEstudio> AnimeEstudio { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AnimeGenero> AnimeGenero { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Capitulo> Capitulo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NombreAlternativo> NombreAlternativo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Personajes> Personajes { get; set; }
     }
 }
