@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AmimirModelStoreContainer" CdmEntityContainer="AmimirEntities">
+    <EntitySetMapping Name="Anime">
+      <EntityTypeMapping TypeName="AmimirModel.Anime">
+        <MappingFragment StoreEntitySet="Anime">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="FechaEstreno" ColumnName="FechaEstreno" />
+          <ScalarProperty Name="SecuelaID" ColumnName="SecuelaID" />
+          <ScalarProperty Name="PrecuelaID" ColumnName="PrecuelaID" />
+          <ScalarProperty Name="Sinopsis" ColumnName="Sinopsis" />
+          <ScalarProperty Name="Puntuacion" ColumnName="Puntuacion" />
+          <ScalarProperty Name="Popularidad" ColumnName="Popularidad" />
+          <ScalarProperty Name="EstadoID" ColumnName="EstadoID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Paquete">
+      <EntityTypeMapping TypeName="AmimirModel.Paquete">
+        <MappingFragment StoreEntitySet="Paquete">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Duracion" ColumnName="Duracion" />
+          <ScalarProperty Name="Precio" ColumnName="Precio" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Usuario">
+      <EntityTypeMapping TypeName="AmimirModel.Usuario">
+        <MappingFragment StoreEntitySet="Usuario">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="CorreoElectronico" ColumnName="CorreoElectronico" />
+          <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

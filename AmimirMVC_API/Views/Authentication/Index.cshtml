@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Autenticarse";
+}
+
+<style>
+    .wrapper {
+        padding-top: 2em;
+    }
+</style>
+<div class="wrapper">
+<h3>@ViewBag.Message</h3>
+
+<form>
+
+    <input type="button" class="btn btn-success" value="Login" />
+    <input type="button" class="btn btn-danger" value="Registrarse" />
+</form>
+
+<input type="button" id="submit" class="btn btn-success" value="Login" onclick="location.href='@Url.Action("Login", "Authentication")'" />
+<input type="button" class="btn btn-default" value="Logout" onclick="location.href='@Url.Action("Logout", "Authentication")'" />
+
+</div>
+
+<script>
+    $(window).on('load', function () {
+        $('#submit').on('click', function () {
+            alert('xd')
+        })
+    })
+</script>

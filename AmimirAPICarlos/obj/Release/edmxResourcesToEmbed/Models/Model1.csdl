@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AmimirModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Anime">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FechaEstreno" Type="DateTime" Precision="3" />
+    <Property Name="Sinopsis" Type="String" MaxLength="400" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Puntuacion" Type="Decimal" Precision="3" Scale="2" Nullable="false" />
+    <Property Name="Popularidad" Type="Decimal" Precision="3" Scale="2" Nullable="false" />
+    <Property Name="EstadoID" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Paquete">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Duracion" Type="Int32" Nullable="false" />
+    <Property Name="Precio" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FechaNacimiento" Type="DateTime" Precision="0" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CorreoElectronico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Contrasena" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="AmimirEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Anime" EntityType="Self.Anime" />
+    <EntitySet Name="Paquete" EntityType="Self.Paquete" />
+    <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+  </EntityContainer>
+</Schema>

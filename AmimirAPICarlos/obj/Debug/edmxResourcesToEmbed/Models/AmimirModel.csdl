@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AmimirModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Anime">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FechaEstreno" Type="DateTime" Precision="3" />
+    <Property Name="SecuelaID" Type="Int32" />
+    <Property Name="PrecuelaID" Type="Int32" />
+    <Property Name="Sinopsis" Type="String" MaxLength="400" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Puntuacion" Type="Decimal" Precision="3" Scale="2" Nullable="false" />
+    <Property Name="Popularidad" Type="Decimal" Precision="3" Scale="2" Nullable="false" />
+    <Property Name="EstadoID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Anime1" Relationship="Self.FK__Anime__PrecuelaI__3A81B327" FromRole="Anime" ToRole="Anime1" />
+    <NavigationProperty Name="Anime2" Relationship="Self.FK__Anime__PrecuelaI__3A81B327" FromRole="Anime1" ToRole="Anime" />
+    <NavigationProperty Name="Anime11" Relationship="Self.FK__Anime__SecuelaID__398D8EEE" FromRole="Anime" ToRole="Anime1" />
+    <NavigationProperty Name="Anime3" Relationship="Self.FK__Anime__SecuelaID__398D8EEE" FromRole="Anime1" ToRole="Anime" />
+  </EntityType>
+  <EntityType Name="Paquete">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Duracion" Type="Int32" Nullable="false" />
+    <Property Name="Precio" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="FechaNacimiento" Type="DateTime" Precision="0" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CorreoElectronico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Contrasena" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Anime__PrecuelaI__3A81B327">
+    <End Role="Anime" Type="Self.Anime" Multiplicity="0..1" />
+    <End Role="Anime1" Type="Self.Anime" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Anime">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Anime1">
+        <PropertyRef Name="PrecuelaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Anime__SecuelaID__398D8EEE">
+    <End Role="Anime" Type="Self.Anime" Multiplicity="0..1" />
+    <End Role="Anime1" Type="Self.Anime" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Anime">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Anime1">
+        <PropertyRef Name="SecuelaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AmimirEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Anime" EntityType="Self.Anime" />
+    <EntitySet Name="Paquete" EntityType="Self.Paquete" />
+    <EntitySet Name="Usuario" EntityType="Self.Usuario" />
+    <AssociationSet Name="FK__Anime__PrecuelaI__3A81B327" Association="Self.FK__Anime__PrecuelaI__3A81B327">
+      <End Role="Anime" EntitySet="Anime" />
+      <End Role="Anime1" EntitySet="Anime" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Anime__SecuelaID__398D8EEE" Association="Self.FK__Anime__SecuelaID__398D8EEE">
+      <End Role="Anime" EntitySet="Anime" />
+      <End Role="Anime1" EntitySet="Anime" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

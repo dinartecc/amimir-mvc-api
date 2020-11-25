@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AmimirModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Anime">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="FechaEstreno" Type="datetime" />
+    <Property Name="SecuelaID" Type="int" />
+    <Property Name="PrecuelaID" Type="int" />
+    <Property Name="Sinopsis" Type="varchar" MaxLength="400" Nullable="false" />
+    <Property Name="Puntuacion" Type="decimal" Precision="3" Scale="2" Nullable="false" />
+    <Property Name="Popularidad" Type="decimal" Precision="3" Scale="2" Nullable="false" />
+    <Property Name="EstadoID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Paquete">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Duracion" Type="int" Nullable="false" />
+    <Property Name="Precio" Type="money" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="FechaNacimiento" Type="date" />
+    <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="CorreoElectronico" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Contrasena" Type="nvarchar" MaxLength="256" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Anime__PrecuelaI__3A81B327">
+    <End Role="Anime" Type="Self.Anime" Multiplicity="0..1" />
+    <End Role="Anime1" Type="Self.Anime" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Anime">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Anime1">
+        <PropertyRef Name="PrecuelaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Anime__SecuelaID__398D8EEE">
+    <End Role="Anime" Type="Self.Anime" Multiplicity="0..1" />
+    <End Role="Anime1" Type="Self.Anime" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Anime">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Anime1">
+        <PropertyRef Name="SecuelaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AmimirModelStoreContainer">
+    <EntitySet Name="Anime" EntityType="Self.Anime" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Paquete" EntityType="Self.Paquete" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Anime__PrecuelaI__3A81B327" Association="Self.FK__Anime__PrecuelaI__3A81B327">
+      <End Role="Anime" EntitySet="Anime" />
+      <End Role="Anime1" EntitySet="Anime" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Anime__SecuelaID__398D8EEE" Association="Self.FK__Anime__SecuelaID__398D8EEE">
+      <End Role="Anime" EntitySet="Anime" />
+      <End Role="Anime1" EntitySet="Anime" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
