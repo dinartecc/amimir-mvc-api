@@ -152,7 +152,7 @@ namespace AmimirAPICarlos.Controllers
                 return NotFound();
             }
 
-            usuario.Contrasena = "password";
+            usuario.Contrasena = sha256("password");
             db.Entry(usuario).State = EntityState.Modified;
 
             try
