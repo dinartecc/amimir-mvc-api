@@ -8,6 +8,7 @@ namespace AmimirMVC_API.Models
     public class Token
     {
         public string AccessToken { get; set; }
-        public int ExpiresIn { get; set; }
+        public DateTime ExpiresAt { get; set; }
+        public bool isAdmin { get; set; }
     }
 }

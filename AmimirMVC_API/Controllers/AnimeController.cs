@@ -9,25 +9,21 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using static AmimirMVC_API.Controllers.Utils;
 
 namespace AmimirMVC_API.Controllers
 {
     public class AnimeController : Controller
     {
         private string baseURL = "https://localhost:44300";
-
-        private bool UsuarioAutenticado()
-        {
-            return HttpContext.Session["token"] != null;
-        }
-
+        HttpClient httpClient = new HttpClient();
 
 
         // GET: Anime
         public ActionResult Index()
         {
-
-            if (!UsuarioAutenticado())
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt > DateTime.Now )
             {
                 return RedirectToAction("Index", "Authentication");
             }
@@ -37,7 +33,6 @@ namespace AmimirMVC_API.Controllers
 
         public ActionResult Lista()
         {
-            HttpClient httpClient = new HttpClient();
             httpClient.BaseAddress = new Uri(baseURL);
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 

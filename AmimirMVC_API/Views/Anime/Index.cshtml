@@ -1,83 +1,63 @@
-﻿
+﻿@model IEnumerable<AmimirMVC_API.Models.AnimeCLS>
+
 @{
-    ViewBag.Title = "Anime";
+    ViewBag.Title = "Index";
 }
 
-<style>
-    #dt-records tbody th, #dt-records tbody td {
-        padding: 0.25rem !important;
-        line-height: 1.3em !important;
-        vertical-align: middle !important;
-    }
+<h2>Index</h2>
 
-    #btnnuevo {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-</style>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaEstreno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sinopsis)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Puntuacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Popularidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EstadoID)
+        </th>
+        <th></th>
+    </tr>
 
-<div class="br-section-wrapper">
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaEstreno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sinopsis)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Puntuacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Popularidad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstadoID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
 
-    <button id="btnnuevo" class="btn btn-primary" data-target="#modal-record"><i class="fa fa-plus" aria-hidden="true"></i> Nuevo</button>
-
-    <table id="dt-records" class="table-wrapper table display responsive nowrap table-hover" style="width:100%" data-page-length='10'>
-        <thead class="thead-colored thead-primary">
-            <tr>
-                <th>Nombre</th>
-                <th>Fecha de Estreno</th>
-                <th>Sin&oacute;psis</th>
-                <th>Puntuaci&oacute;n</th>
-                <th>Popularidad</th>
-                <th>Estado ID</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
-</div>
-
-<div id="modal-record" class="modal" role="dialog">
-    <div class="modal-dialog" style="width: 400px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Direcciones AW</h3>
-            </div>
-            <div class="modal-body">
-                <form id="NewRecord" role="form">
-                    <div>
-                        <div class="form-group">
-                            <label for="txtNombre" class="control-label">Nombre</label>
-                            <input type="text" id="txtNombre" class="form-control" placeholder="Nombre" />
-                        </div>
-                        <div class="form-group">
-                            <label for="txtFechaEstreno" class="control-label">Fecha de Estreno</label>
-                            <input type="date" id="txtFechaEstreno" class="form-control" placeholder="Fecha de Estreno" />
-                        </div>
-                        <div class="form-group">
-                            <label for="txtSinopsis" class="control-label">Sin&oacute;psis</label>
-                            <input type="text" id="txtSinopsis" class="form-control" placeholder="Sinópsis" />
-                        </div>
-                        <div class="form-group">
-                            <label for="txtPuntuacion" class="control-label">Puntuaci&oacute;n</label>
-                            <input type="number" step="0.01" min="1" max="5" id="txtPuntuacion" class="form-control" placeholder="Puntuación" />
-                        </div>
-                        <div class="form-group">
-                            <label for="txtPopularidad" class="control-label">Popularidad</label>
-                            <input type="number" step="0.01" min="1" max="5" id="txtPopularidad" class="form-control" placeholder="Popularidad" />
-                        </div>
-                        <div class="form-group">
-                            <label for="txtEstadoID" class="control-label">Estado ID</label>
-                            <input type="number" step="1" min="1" max="5" id="txtEstadoID" class="form-control" placeholder="Estado" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="btnguardar" data-dismiss="modal" class="btn btn-primary">Guardar</button>
-                        <button id="btncerrar" data-dismiss="modal" class="btn btn-danger">Cerrar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="~/Scripts/Anime.js"></script>
+</table>

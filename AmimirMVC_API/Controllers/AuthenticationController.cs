@@ -47,7 +47,6 @@ namespace AmimirMVC_API.Controllers
 
             Token token = JsonConvert.DeserializeObject<Token>(stringJWT);
 
-
             HttpContext.Session.Add("token", token.AccessToken);
 
             ViewBag.Message = "Usuario Autenticado";

@@ -77,7 +77,8 @@ namespace AmimirAPICarlos.Controllers
 
             Token token = new Token();
             token.AccessToken = jwtTokenSerialized;
-            token.ExpiresIn = Convert.ToInt32(expireTime) * 60;
+            token.ExpiresAt =  now.AddMinutes(Convert.ToInt32(expireTime));
+            token.isAdmin = user.isAdmin;
 
             return token;
         }
