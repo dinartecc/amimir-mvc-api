@@ -27,6 +27,7 @@ namespace AmimirAPICarlos.Models
         public string Sinopsis { get; set; }
         public System.DateTime FechaPublicado { get; set; }
         public string URL { get; set; }
+        public string Imagen { get; set; }
     
         public virtual Anime Anime { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

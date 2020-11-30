@@ -20,13 +20,18 @@ namespace AmimirMVC_API.Controllers
         private string baseURL = "https://localhost:44300";
         public ActionResult Index()
         {
-            if (HttpContext.Session["token"]==null)
+            var xd = Session["token"];
+            Token token = HttpContext.Session["token"] as Token;
+            if (token==null )
             {
-                ViewBag.Message = "Presione login para autenticarse";
+                ViewBag.IsLoggedIn = false;
+                ViewBag.IsAdmin = false;
             }
             else
             {
-                ViewBag.Message = "Presione logout para cerrar sesión";
+                ViewBag.IsLoggedIn = true;
+                ViewBag.IsAdmin = token.isAdmin;
+                ViewBag.Username = token.Username;
             }
             return View();
         }
@@ -45,19 +50,33 @@ namespace AmimirMVC_API.Controllers
 
             string stringJWT = response.Content.ReadAsStringAsync().Result;
 
+            if (!response.IsSuccessStatusCode)
+            {
+                ViewBag.IsLoggedIn = false;
+                ViewBag.Message = "Credenciales incorrectas";
+                return View("Index");
+            }
+
             Token token = JsonConvert.DeserializeObject<Token>(stringJWT);
 
-            HttpContext.Session.Add("token", token.AccessToken);
+            token.Username = user.Username;
 
-            ViewBag.Message = "Usuario Autenticado";
+            ViewBag.IsLoggedIn = true;
+            ViewBag.Username = user.Username;
+            ViewBag.IsAdmin = token.isAdmin;
+            ViewBag.Message = "Has iniciado sesión correctamente";
+
+
+            Session["token"] = token;
 
             return View("Index");
         }
 
         public ActionResult Logout()
         {
+            ViewBag.IsLoggedIn = false;
             HttpContext.Session.Remove("token");
-            ViewBag.Message = "El usuario a cerrado la sesión";
+            ViewBag.Message = "Has cerrado la sesión";
 
             return View("Index");
         }

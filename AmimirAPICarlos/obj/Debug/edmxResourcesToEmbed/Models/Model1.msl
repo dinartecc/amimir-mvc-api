@@ -4,6 +4,7 @@
     <EntitySetMapping Name="Anime">
       <EntityTypeMapping TypeName="AmimirModel.Anime">
         <MappingFragment StoreEntitySet="Anime">
+          <ScalarProperty Name="Imagen" ColumnName="Imagen" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="FechaEstreno" ColumnName="FechaEstreno" />
@@ -66,6 +67,7 @@
     <EntitySetMapping Name="Capitulo">
       <EntityTypeMapping TypeName="AmimirModel.Capitulo">
         <MappingFragment StoreEntitySet="Capitulo">
+          <ScalarProperty Name="Imagen" ColumnName="Imagen" />
           <ScalarProperty Name="URL" ColumnName="URL" />
           <ScalarProperty Name="FechaPublicado" ColumnName="FechaPublicado" />
           <ScalarProperty Name="Sinopsis" ColumnName="Sinopsis" />
@@ -87,6 +89,7 @@
     <EntitySetMapping Name="Estudio">
       <EntityTypeMapping TypeName="AmimirModel.Estudio">
         <MappingFragment StoreEntitySet="Estudio">
+          <ScalarProperty Name="Imagen" ColumnName="Imagen" />
           <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
@@ -112,6 +115,7 @@
     <EntitySetMapping Name="Personajes">
       <EntityTypeMapping TypeName="AmimirModel.Personajes">
         <MappingFragment StoreEntitySet="Personajes">
+          <ScalarProperty Name="Rol" ColumnName="Rol" />
           <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="ActorID" ColumnName="ActorID" />
           <ScalarProperty Name="AnimeID" ColumnName="AnimeID" />

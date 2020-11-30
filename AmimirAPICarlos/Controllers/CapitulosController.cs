@@ -38,7 +38,7 @@ namespace AmimirAPICarlos.Controllers
 
         // PUT: api/Capitulos/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutCapitulo(int id, Capitulo capitulo)
+        public IHttpActionResult PutCapitulo(int id, CapituloWrapper Req)
         {
             if (!AdminValidator())
             {
@@ -50,9 +50,16 @@ namespace AmimirAPICarlos.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != capitulo.ID)
+            var capitulo = Req.Capitulo;
+            capitulo.ID = id;
+            var URLAlternativos = Req.urlAlternativos;
+
+            db.UrlAlternativo.RemoveRange(db.UrlAlternativo.Where(x => x.CapituloID == id));
+
+            foreach ( UrlAlternativo urlAlternativo in URLAlternativos )
             {
-                return BadRequest();
+                urlAlternativo.CapituloID = id;
+                db.UrlAlternativo.Add(urlAlternativo);
             }
 
             db.Entry(capitulo).State = EntityState.Modified;
@@ -78,7 +85,7 @@ namespace AmimirAPICarlos.Controllers
 
         // POST: api/Capitulos
         [ResponseType(typeof(Capitulo))]
-        public IHttpActionResult PostCapitulo(Capitulo capitulo)
+        public IHttpActionResult PostCapitulo(CapituloWrapper Req)
         {
             if (!AdminValidator())
             {
@@ -90,8 +97,28 @@ namespace AmimirAPICarlos.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Capitulo.Add(capitulo);
-            db.SaveChanges();
+            var capitulo = Req.Capitulo;
+
+            try
+            {
+                var URLAlternativos = Req.urlAlternativos;
+
+                db.Capitulo.Add(capitulo);
+                db.SaveChanges();
+
+                foreach(UrlAlternativo urlAlternativo in URLAlternativos)
+                {
+                    urlAlternativo.CapituloID = capitulo.ID;
+                    db.UrlAlternativo.Add(urlAlternativo);
+                }
+
+                db.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
+
 
             return CreatedAtRoute("DefaultApi", new { id = capitulo.ID }, capitulo);
         }
@@ -111,9 +138,17 @@ namespace AmimirAPICarlos.Controllers
                 return NotFound();
             }
 
-            db.Capitulo.Remove(capitulo);
-            db.SaveChanges();
-
+            try
+            {
+                db.Capitulo.Remove(capitulo);
+                db.UrlAlternativo.RemoveRange(db.UrlAlternativo.Where(x => x.CapituloID == id));
+                db.SaveChanges();
+            }
+            catch
+            {
+                return Conflict();
+            }
+            
             return Ok(capitulo);
         }
 

@@ -23,20 +23,42 @@ namespace AmimirMVC_API.Controllers
         public ActionResult Index()
         {
             Token token = HttpContext.Session["token"] as Token;
-            if (token == null || token.ExpiresAt > DateTime.Now )
+            if (token == null || token.ExpiresAt < DateTime.Now )
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+            ViewBag.IsAdmin = token.isAdmin;
+
+            httpClient.BaseAddress = new Uri(baseURL);
+            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+            string responseGenero = httpClient.GetAsync("/api/Generos").Result.Content.ReadAsStringAsync().Result;
+            ViewBag.Generos = JsonConvert.DeserializeObject<List<GeneroCLS>>(responseGenero);
+            string responseEstudio = httpClient.GetAsync("/api/Estudios").Result.Content.ReadAsStringAsync().Result;
+            ViewBag.Estudios = JsonConvert.DeserializeObject<List<EstudioCLS>>(responseEstudio);
+            string responseEstado = httpClient.GetAsync("/api/Estados").Result.Content.ReadAsStringAsync().Result;
+            ViewBag.Estados = JsonConvert.DeserializeObject<List<EstadoCLS>>(responseEstado);
+            string responseActor = httpClient.GetAsync("/api/Actores").Result.Content.ReadAsStringAsync().Result;
+            ViewBag.Actores = JsonConvert.DeserializeObject<List<ActorCLS>>(responseActor);
+
+            return View();
+        }
+        
+        
+        public ActionResult Lista()
+        {
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
             {
                 return RedirectToAction("Index", "Authentication");
             }
 
-            return View();
-        }
-
-        public ActionResult Lista()
-        {
             httpClient.BaseAddress = new Uri(baseURL);
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
             HttpResponseMessage response = httpClient.GetAsync("/api/Animes").Result;
 
@@ -46,49 +68,47 @@ namespace AmimirMVC_API.Controllers
             }
 
             string data = response.Content.ReadAsStringAsync().Result;
-            List<AnimeCLS> animes = JsonConvert.DeserializeObject<List<AnimeCLS>>(data);
 
             return Json(
                 new
                 {
                     success = true,
-                    data = animes,
+                    data = data,
                     message = "done"
                 },
                 JsonRequestBehavior.AllowGet
                 );
         }
 
-        public ActionResult Guardar(int ID, string Nombre, DateTime? FechaEstreno, string Sinopsis, decimal Puntuacion, decimal Popularidad, int EstadoID)
+        [HttpPost]
+        public ActionResult Guardar(AnimeCLS anime, List<int> generos, List<int> estudios, List<PersonajeCLS> personajes, List<string> nombresAlternativos)
         {
-            if (!UsuarioAutenticado())
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
             {
-                return Json(
-                        new
-                        {
-                            success = false,
-                            message = "Usuario no autenticado"
-                        }, JsonRequestBehavior.AllowGet);
+                return RedirectToAction("Index", "Authentication");
             }
-                try
+
+            try
             {
-                AnimeCLS anime = new AnimeCLS();
-                anime.ID = ID;
-                anime.Nombre = Nombre;
-                anime.FechaEstreno = FechaEstreno;
-                anime.Sinopsis = Sinopsis;
-                anime.Puntuacion = Puntuacion;
-                anime.Popularidad = Popularidad;
-                anime.EstadoID = EstadoID;
+
+                int ID = anime.ID ?? 0;
+
+                AnimeWrapper req = new AnimeWrapper();
+                req.Anime = anime;
+                req.Generos = generos ?? new List<int>();
+                req.Estudios = estudios ?? new List<int>();
+                req.Personajes = personajes ?? new List<PersonajeCLS>();
+                req.NombresAlternativos = nombresAlternativos ?? new List<string>();
 
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(baseURL);
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-                string animeJson = JsonConvert.SerializeObject(anime);
-                HttpContent body = new StringContent(animeJson, Encoding.UTF8, "application/json");
+                string reqJson = JsonConvert.SerializeObject(req);
+                HttpContent body = new StringContent(reqJson, Encoding.UTF8, "application/json");
 
                 if (ID == 0)
                 {
@@ -133,17 +153,14 @@ namespace AmimirMVC_API.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult Eliminar(int ID)
         {
 
-            if (!UsuarioAutenticado())
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
             {
-                return Json(
-                        new
-                        {
-                            success = false,
-                            message = "Usuario no autenticado"
-                        }, JsonRequestBehavior.AllowGet);
+                return RedirectToAction("Index", "Authentication");
             }
 
             try
@@ -152,7 +169,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.BaseAddress = new Uri(baseURL);
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
                 HttpResponseMessage response = httpClient.DeleteAsync($"/api/Animes/{ID}").Result;

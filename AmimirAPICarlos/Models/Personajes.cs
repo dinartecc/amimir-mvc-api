@@ -18,6 +18,7 @@ namespace AmimirAPICarlos.Models
         public int AnimeID { get; set; }
         public int ActorID { get; set; }
         public string Nombre { get; set; }
+        public int Rol { get; set; }
     
         public virtual Actor Actor { get; set; }
         public virtual Anime Anime { get; set; }

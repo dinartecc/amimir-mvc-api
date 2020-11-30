@@ -38,7 +38,7 @@ namespace AmimirAPICarlos.Controllers
 
         // PUT: api/Animes/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutAnime(int id, Anime anime)
+        public IHttpActionResult PutAnime(int id, AnimeWrapper Req)
         {
             if (!AdminValidator())
             {
@@ -50,9 +50,51 @@ namespace AmimirAPICarlos.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != anime.ID)
+
+            var anime = Req.Anime;
+            anime.ID = id;
+            var Generos = Req.Generos;
+            var Estudios = Req.Estudios;
+            var NombresAlternativos = Req.NombresAlternativos;
+            var Personajes = Req.Personajes;
+
+            db.Personajes.RemoveRange(db.Personajes.Where(x => x.AnimeID == id));
+            db.AnimeGenero.RemoveRange(db.AnimeGenero.Where(x => x.AnimeID == id));
+            db.AnimeEstudio.RemoveRange(db.AnimeEstudio.Where(x => x.AnimeID == id));
+            db.NombreAlternativo.RemoveRange(db.NombreAlternativo.Where(x => x.AnimeID == id));
+
+            foreach ( int GeneroID in Generos )
             {
-                return BadRequest();
+                AnimeGenero animeGenero = new AnimeGenero();
+                animeGenero.AnimeID = id;
+                animeGenero.GeneroID = GeneroID;
+
+                db.AnimeGenero.Add(animeGenero);
+            }
+
+            foreach (int EstudioID in Estudios)
+            {
+                AnimeEstudio animeEstudio = new AnimeEstudio();
+                animeEstudio.AnimeID = id;
+                animeEstudio.EstudioID = EstudioID;
+
+                db.AnimeEstudio.Add(animeEstudio);
+            }
+
+            foreach (string NombreAlternativo in NombresAlternativos)
+            {
+                NombreAlternativo nombreAlternativo = new NombreAlternativo();
+                nombreAlternativo.AnimeID = id;
+                nombreAlternativo.Nombre = NombreAlternativo;
+
+                db.NombreAlternativo.Add(nombreAlternativo);
+            }
+
+            foreach (Personajes Personaje in Personajes)
+            {
+                Personaje.AnimeID = id;
+
+                db.Personajes.Add(Personaje);
             }
 
             db.Entry(anime).State = EntityState.Modified;
@@ -78,7 +120,7 @@ namespace AmimirAPICarlos.Controllers
 
         // POST: api/Animes
         [ResponseType(typeof(Anime))]
-        public IHttpActionResult PostAnime(Anime anime)
+        public IHttpActionResult PostAnime(AnimeWrapper Req)
         {
             if (!AdminValidator())
             {
@@ -90,10 +132,54 @@ namespace AmimirAPICarlos.Controllers
                 return BadRequest(ModelState);
             }
 
+            var anime = Req.Anime;
+
             try
             {
+                var Generos = Req.Generos;
+                var Estudios = Req.Estudios;
+                var NombresAlternativos = Req.NombresAlternativos;
+                var Personajes = Req.Personajes;
+
                 db.Anime.Add(anime);
                 db.SaveChanges();
+
+                foreach (int GeneroID in Generos)
+                {
+                    AnimeGenero animeGenero = new AnimeGenero();
+                    animeGenero.AnimeID = anime.ID;
+                    animeGenero.GeneroID = GeneroID;
+
+                    db.AnimeGenero.Add(animeGenero);
+                }
+
+                foreach (int EstudioID in Estudios)
+                {
+                    AnimeEstudio animeEstudio = new AnimeEstudio();
+                    animeEstudio.AnimeID = anime.ID;
+                    animeEstudio.EstudioID = EstudioID;
+
+                    db.AnimeEstudio.Add(animeEstudio);
+                }
+
+                foreach (string NombreAlternativo in NombresAlternativos)
+                {
+                    NombreAlternativo nombreAlternativo = new NombreAlternativo();
+                    nombreAlternativo.AnimeID = anime.ID;
+                    nombreAlternativo.Nombre = NombreAlternativo;
+
+                    db.NombreAlternativo.Add(nombreAlternativo);
+                }
+
+                foreach (Personajes Personaje in Personajes)
+                {
+                    Personaje.AnimeID = anime.ID;
+
+                    db.Personajes.Add(Personaje);
+                }
+
+                db.SaveChanges();
+
             }
             catch
             {
@@ -120,6 +206,10 @@ namespace AmimirAPICarlos.Controllers
 
             try
             {
+                db.Personajes.RemoveRange(db.Personajes.Where(x => x.AnimeID == id));
+                db.AnimeGenero.RemoveRange(db.AnimeGenero.Where(x => x.AnimeID == id));
+                db.AnimeEstudio.RemoveRange(db.AnimeEstudio.Where(x => x.AnimeID == id));
+                db.NombreAlternativo.RemoveRange(db.NombreAlternativo.Where(x => x.AnimeID == id));
                 db.Anime.Remove(anime);
                 db.SaveChanges();
             }

@@ -3,29 +3,42 @@
     ViewBag.Title = "Autenticarse";
 }
 
-<style>
-    .wrapper {
-        padding-top: 2em;
+<p>@ViewBag.Message</p>
+
+@if (ViewBag.IsLoggedIn == null || !ViewBag.IsLoggedIn)
+{
+    using (Html.BeginForm("Login", "Authentication", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
+            <div class="mb-4">
+                <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+                    Usuario
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" name="Username" id="username" type="text" placeholder="Username">
+            </div>
+            <div class="mb-6">
+                <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
+                    Contraseña
+                </label>
+                <input class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3" id="password" name="Contrasena" type="password" placeholder="******************">
+                <p class="text-red text-xs italic">Please choose a password.</p>
+            </div>
+            <div class="flex items-center justify-between">
+                <input type="submit" value="Create" class="bg-blue-500 hover:bg-blue-dark-500 text-white font-bold py-2 px-4 rounded" />
+            </div>
+        </div>
     }
-</style>
-<div class="wrapper">
-<h3>@ViewBag.Message</h3>
+}
+else
+{
+    using (Html.BeginForm("Logout", "Authentication", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <h3>Usuario</h3>
+        <p>@ViewBag.Username</p>
+        <input type="submit" value="Cerrar Sesión" class="bg-blue-500 hover:bg-blue-dark-500 text-white font-bold py-2 px-4 rounded" />
+    }
 
-<form>
+}
 
-    <input type="button" class="btn btn-success" value="Login" />
-    <input type="button" class="btn btn-danger" value="Registrarse" />
-</form>
-
-<input type="button" id="submit" class="btn btn-success" value="Login" onclick="location.href='@Url.Action("Login", "Authentication")'" />
-<input type="button" class="btn btn-default" value="Logout" onclick="location.href='@Url.Action("Logout", "Authentication")'" />
-
-</div>
-
-<script>
-    $(window).on('load', function () {
-        $('#submit').on('click', function () {
-            alert('xd')
-        })
-    })
-</script>

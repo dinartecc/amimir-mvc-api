@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AmimirMVC_API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,20 +11,12 @@ namespace AmimirMVC_API.Controllers
     {
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt > DateTime.Now)
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+            ViewBag.IsAdmin = token.isAdmin;
             return View();
         }
     }

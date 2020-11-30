@@ -17,6 +17,7 @@
     <NavigationProperty Name="Capitulo" Relationship="AmimirModel.FK__Capitulo__AnimeI__52593CB8" FromRole="Anime" ToRole="Capitulo" />
     <NavigationProperty Name="NombreAlternativo" Relationship="AmimirModel.FK__NombreAlt__Anime__440B1D61" FromRole="Anime" ToRole="NombreAlternativo" />
     <NavigationProperty Name="Personajes" Relationship="AmimirModel.FK__Personaje__Anime__403A8C7D" FromRole="Anime" ToRole="Personajes" />
+    <Property Name="Imagen" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="Paquete">
     <Key>
@@ -135,6 +136,7 @@
     <Property Name="URL" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__Capitulo__AnimeI__52593CB8" FromRole="Capitulo" ToRole="Anime" />
     <NavigationProperty Name="UrlAlternativo" Relationship="AmimirModel.FK__UrlAltern__Capit__5535A963" FromRole="Capitulo" ToRole="UrlAlternativo" />
+    <Property Name="Imagen" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="Estado">
     <Key>
@@ -151,6 +153,7 @@
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="AnimeEstudio" Relationship="AmimirModel.FK__AnimeEstu__Estud__48CFD27E" FromRole="Estudio" ToRole="AnimeEstudio" />
+    <Property Name="Imagen" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="Genero">
     <Key>
@@ -179,6 +182,7 @@
     <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Actor" Relationship="AmimirModel.FK__Personaje__Actor__412EB0B6" FromRole="Personajes" ToRole="Actor" />
     <NavigationProperty Name="Anime" Relationship="AmimirModel.FK__Personaje__Anime__403A8C7D" FromRole="Personajes" ToRole="Anime" />
+    <Property Name="Rol" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="UrlAlternativo">
     <Key>

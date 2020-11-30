@@ -9,13 +9,17 @@
 
 namespace AmimirAPICarlos.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
     public partial class AnimeEstudio
     {
+        [JsonIgnore]
         public int ID { get; set; }
+        [JsonIgnore]
         public int EstudioID { get; set; }
+        [JsonIgnore]
         public int AnimeID { get; set; }
     
         public virtual Anime Anime { get; set; }
