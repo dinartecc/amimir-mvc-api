@@ -137,8 +137,19 @@ namespace AmimirAPICarlos.Controllers
                 return NotFound();
             }
 
-            db.Estado.Remove(estado);
-            db.SaveChanges();
+            try
+            {
+                db.Estado.Remove(estado);
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                return Conflict();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
 
             return Ok(estado);
         }

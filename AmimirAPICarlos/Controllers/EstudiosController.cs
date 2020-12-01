@@ -96,7 +96,18 @@ namespace AmimirAPICarlos.Controllers
             }
 
             db.Estudio.Remove(estudio);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                return Conflict();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
 
             return Ok(estudio);
         }

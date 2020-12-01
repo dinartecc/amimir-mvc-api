@@ -213,9 +213,13 @@ namespace AmimirAPICarlos.Controllers
                 db.Anime.Remove(anime);
                 db.SaveChanges();
             }
-            catch
+            catch (DbUpdateException)
             {
                 return Conflict();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
             }
 
             return Ok(anime);

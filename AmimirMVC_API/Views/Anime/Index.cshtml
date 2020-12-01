@@ -1,5 +1,9 @@
 ﻿@Html.AntiForgeryToken()
 
+@{
+    ViewBag.Title = "Anime";
+}
+
 <div id="modal" class="hidden fixed z-50 inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
     <div class="bg-white text-lg p-8 rounded flex space-y-2 flex-col w-8/12" style="max-height: 75vh">
         <div class="flex justify-between items-center">
@@ -12,7 +16,7 @@
             }
 
         </div>
-       
+
         <form id="modal-form" class="overflow-auto flex space-y-2 flex-col">
             <ul id="modal-errors" class="text-red-700">
             </ul>
@@ -118,231 +122,193 @@
         </form>
     </div>
 </div>
-    <div class="bg-gray-100 text-gray-900 tracking-wider flex-1 leading-normal">
-        <!--Container-->
-        <div class="container w-full md:w-4/5 xl:w-3/5  mx-auto px-2">
+<div class="bg-gray-100 text-gray-900 tracking-wider flex-1 leading-normal">
+    <!--Container-->
+    <div class="container w-full md:w-4/5 xl:w-3/5  mx-auto px-2">
 
-            <!--Title-->
-            <div class="flex items-center justify-between">
+        <!--Title-->
+        <div class="flex items-center justify-between">
 
-                <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
-                    Datos de Animes
-                </h1>
-                @if (ViewBag.isAdmin)
-                {
-                    <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Crear Nuevo</button>
-                }
-                
-            </div>
+            <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
+                Datos de Animes
+            </h1>
+            @if (ViewBag.isAdmin)
+            {
+                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Crear Nuevo</button>
+            }
 
-
-            <!--Card-->
-            <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
-                <table id="datatable" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
-                    <thead>
-                    </thead>
-                    <tbody>
-                    </tbody>
-
-                </table>
+        </div>
 
 
-            </div>
-            <!--/Card-->
+        <!--Card-->
+        <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+            <table id="datatable" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
 
 
         </div>
-       </div>
+        <!--/Card-->
 
 
-    <script>
-        $(document).ready(function () {
+    </div>
+</div>
 
-            //datepicker
-            var datepicker = $('[data-toggle="datepicker"]').datepicker({format: 'dd/mm/yyyy'});
 
-            // tables
-            var table = $('#datatable').DataTable({
-                "language": {
-                    "decimal": "",
-                    "emptyTable": "No hay datos disponibles",
-                    "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-                    "infoEmpty": "Mostrando 0 registros",
-                    "infoFiltered": "(filtrados de un total de _MAX_ registros)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Registros por página _MENU_ ",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "Buscar:",
-                    "zeroRecords": "No se encontraron coincidencias",
-                    "paginate": {
-                        "first": "Primera",
-                        "last": "Última",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending": ": activate to sort column ascending",
-                        "sortDescending": ": activate to sort column descending"
-                    }
+<script>
+    $(document).ready(function () {
+
+        //datepicker
+        var datepicker = $('[data-toggle="datepicker"]').datepicker({ format: 'dd/mm/yyyy' });
+
+        // tables
+        var table = $('#datatable').DataTable({
+            "language": {
+                "decimal": "",
+                "emptyTable": "No hay datos disponibles",
+                "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+                "infoEmpty": "Mostrando 0 registros",
+                "infoFiltered": "(filtrados de un total de _MAX_ registros)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Registros por página _MENU_ ",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "No se encontraron coincidencias",
+                "paginate": {
+                    "first": "Primera",
+                    "last": "Última",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
                 },
-                "columnDefs": [
-                    {
-                        "targets": [2],
-                        "render": function (data) {
-                            var x = moment(data)
-                            return x.isValid() ? moment(data).format('D/M/YYYY') : '---'
-                        }
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            },
+            "columnDefs": [
+                {
+                    "targets": [2],
+                    "render": function (data) {
+                        var x = moment(data)
+                        return x.isValid() ? moment(data).format('D/M/YYYY') : '---'
                     }
-                ],
-                "columns": [
-                    { name: "id", title: "ID", data: 'ID' },
-                    { name: "nombre", title: "Nombre", data: 'Nombre' },
-                    { name: "fecha_estreno", title: "Fecha Estreno", defaultContent: '---', data: 'FechaEstreno' },
-                    { name: "estado", title: "Estado", data: 'Estado.Nombre' },
-                    { name: "puntuacion", title: "Puntuación", data: 'Puntuacion', searchable: false },
-                    { name: "popularidad", title: "Popularidad", data: 'Popularidad', searchable: false },
-                ],
-                responsive: true,
-            })
-                .columns.adjust()
-                .responsive.recalc();
-
-            //onclick close modal
-            $("#modal-cancel").on('click', function () {
-                $("#modal").addClass('hidden')
-            })
-
-            //onclick save modal 
-            $("#modal-save").on('click', function () {
-                var error = false,
-                    id = $("#id").val(),
-                    nombre = $("#nombre").val(),
-                    imagen = $("#imagen").val(),
-                    fechaEstreno = moment($("#fecha-estreno").val(), 'DD/MM/YYYY', true),
-                    fechaString = $("#fecha-estreno").val(),
-                    nombresAlternativos = $("#nombres-alternativos").val().split(';'),
-                    sinopsis = $("#sinopsis").val(),
-                    estado = $("#estado").select2("data")
-                    generos = $("#generos").select2('data'),
-                    popularidad = $("#popularidad").val(),
-                    puntuacion = $("#puntuacion").val(),
-                    estudios = $("#estudios").select2('data'),
-                        personajes = $("#actores-detail input").map(function () {
-                            var string = $(this).attr("name")
-                            return { ActorID: string.split("-")[1], Nombre: $(this).val(), Rol: 1 }
-                        }).get()
-
-
-
-
-                $("#modal .border-red-500").removeClass("border-red-500")
-
-                $("#modal-errors").empty()
-
-                if (!nombre) {
-                    error = true
-                    $("#modal-errors").append("<li>Nombre no puede ser vacío</li>")
-                    $("#nombre").addClass("border-red-500")
                 }
-                if (fechaString !== '' && !fechaEstreno.isValid()) {
-                    error = true
-                    $("#modal-errors").append("<li>Ingrese una fecha válida</li>")
-                    $("#fecha-estreno").addClass("border-red-500")
-                }
-                if (!sinopsis) {
-                    error = true
-                    $("#modal-errors").append("<li>Sinópsis no puede ser vacío</li>")
-                    $("#sinopsis").addClass("border-red-500")
-                }
-                if (estado.length === 0) {
-                    error = true
-                    $("#modal-errors").append("<li>Escoja un estado</li>")
-                    $("#estado-container").addClass("border-red-500")
-                }
-                if (isNaN(popularidad) || popularidad < 1 || popularidad > 5 ) {
-                    error = true
-                    $("#modal-errors").append("<li>Ingrese popularidad válida entre 1 a 5</li>")
-                    $("#popularidad").addClass("border-red-500")
-                }
-                if (isNaN(puntuacion) || puntuacion < 1 || puntuacion > 5) {
-                    error = true
-                    $("#modal-errors").append("<li>Ingrese puntuación válida entre 1 a 5</li>")
-                    $("#puntuacion").addClass("border-red-500")
-                }
-                if (estudios.length === 0) {
-                    error = true
-                    $("#modal-errors").append("<li>Escoja un estudio</li>")
-                    $("#estudios-container").addClass("border-red-500")
-                }
+            ],
+            "columns": [
+                { name: "id", title: "ID", data: 'ID' },
+                { name: "nombre", title: "Nombre", data: 'Nombre' },
+                { name: "fecha_estreno", title: "Fecha Estreno", defaultContent: '---', data: 'FechaEstreno' },
+                { name: "estado", title: "Estado", data: 'Estado.Nombre' },
+                { name: "puntuacion", title: "Puntuación", data: 'Puntuacion', searchable: false },
+                { name: "popularidad", title: "Popularidad", data: 'Popularidad', searchable: false },
+            ],
+            responsive: true,
+        })
+            .columns.adjust()
+            .responsive.recalc();
 
-                if (!error) {
-                    const req = {
-                        anime: {
-                            ID: id,
-                            Nombre: nombre,
-                            Sinopsis: sinopsis,
-                            Puntuacion: puntuacion,
-                            Popularidad: popularidad,
-                            Imagen: imagen,
-                            EstadoID: estado[0].id
-                        },
-                        generos: generos.map(item => item.id),
-                        estudios: estudios.map(item => item.id),
-                        personajes: personajes,
-                        nombresAlternativos: nombresAlternativos
-                    }
+        //onclick close modal
+        $("#modal-cancel").on('click', function () {
+            $("#modal").addClass('hidden')
+        })
 
-                    if (fechaString !== '') {
-                        req.anime.FechaEstreno = fechaEstreno.toISOString()
-                    }
+        //onclick save modal
+        $("#modal-save").on('click', function () {
+            var error = false,
+                id = $("#id").val(),
+                nombre = $("#nombre").val(),
+                imagen = $("#imagen").val(),
+                fechaEstreno = moment($("#fecha-estreno").val(), 'DD/MM/YYYY', true),
+                fechaString = $("#fecha-estreno").val(),
+                nombresAlternativos = $("#nombres-alternativos").val().split(';'),
+                sinopsis = $("#sinopsis").val(),
+                estado = $("#estado").select2("data")
+            generos = $("#generos").select2('data'),
+                popularidad = $("#popularidad").val(),
+                puntuacion = $("#puntuacion").val(),
+                estudios = $("#estudios").select2('data'),
+                personajes = $("#actores-detail input").map(function () {
+                    var string = $(this).attr("name")
+                    return { ActorID: string.split("-")[1], Nombre: $(this).val(), Rol: 1 }
+                }).get()
 
-                        $.ajax({
-                            url: "/Anime/Guardar",
-                            method: "POST",
-                            headers: {
-                                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-                            },
-                            data: req,
-                            dataType: 'json'
-                        }).done(function (response) {
-                            updateRows()
-                            Swal.fire({
-                                title: '¡Éxito!',
-                                icon: 'success',
-                                text: response.message,
-                                showCloseButton: 'true',
-                                closeButtonText: 'Cerrar'
-                            })
-                                .then(function () {
-                                    $("#modal").addClass("hidden")
-                                })
-                        }).fail(function (response) {
-                            Swal.fire({
-                                title: 'Ha ocurrido un error!',
-                                icon: 'error',
-                                text: 'Inténtelo más tarde',
-                                showCloseButton: 'true',
-                                closeButtonText: 'Cerrar'
-                            })
-                        })
-                    
+
+
+
+            $("#modal .border-red-500").removeClass("border-red-500")
+
+            $("#modal-errors").empty()
+
+            if (!nombre) {
+                error = true
+                $("#modal-errors").append("<li>Nombre no puede ser vacío</li>")
+                $("#nombre").addClass("border-red-500")
+            }
+            if (fechaString !== '' && !fechaEstreno.isValid()) {
+                error = true
+                $("#modal-errors").append("<li>Ingrese una fecha válida</li>")
+                $("#fecha-estreno").addClass("border-red-500")
+            }
+            if (!sinopsis) {
+                error = true
+                $("#modal-errors").append("<li>Sinópsis no puede ser vacío</li>")
+                $("#sinopsis").addClass("border-red-500")
+            }
+            if (estado.length === 0) {
+                error = true
+                $("#modal-errors").append("<li>Escoja un estado</li>")
+                $("#estado-container").addClass("border-red-500")
+            }
+            if (isNaN(popularidad) || popularidad < 1 || popularidad > 5) {
+                error = true
+                $("#modal-errors").append("<li>Ingrese popularidad válida entre 1 a 5</li>")
+                $("#popularidad").addClass("border-red-500")
+            }
+            if (isNaN(puntuacion) || puntuacion < 1 || puntuacion > 5) {
+                error = true
+                $("#modal-errors").append("<li>Ingrese puntuación válida entre 1 a 5</li>")
+                $("#puntuacion").addClass("border-red-500")
+            }
+            if (estudios.length === 0) {
+                error = true
+                $("#modal-errors").append("<li>Escoja un estudio</li>")
+                $("#estudios-container").addClass("border-red-500")
+            }
+
+            if (!error) {
+                const req = {
+                    anime: {
+                        ID: id,
+                        Nombre: nombre,
+                        Sinopsis: sinopsis,
+                        Puntuacion: puntuacion,
+                        Popularidad: popularidad,
+                        Imagen: imagen,
+                        EstadoID: estado[0].id
+                    },
+                    generos: generos.map(item => item.id),
+                    estudios: estudios.map(item => item.id),
+                    personajes: personajes,
+                    nombresAlternativos: nombresAlternativos
                 }
 
-            })
-
-            //onclick delete modal
-            $("#modal-delete").on("click", function () {
-                var id = $("#id").val()
+                if (fechaString !== '') {
+                    req.anime.FechaEstreno = fechaEstreno.toISOString()
+                }
 
                 $.ajax({
-                    url: "/Anime/Eliminar/",
+                    url: "/Anime/Guardar",
                     method: "POST",
                     headers: {
                         "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
                     },
-                    data: {id: id},
+                    data: req,
                     dataType: 'json'
                 }).done(function (response) {
                     updateRows()
@@ -365,23 +331,61 @@
                         closeButtonText: 'Cerrar'
                     })
                 })
+
+            }
+
+        })
+
+        //onclick delete modal
+        $("#modal-delete").on("click", function () {
+            var id = $("#id").val()
+
+            $.ajax({
+                url: "/Anime/Eliminar/",
+                method: "POST",
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                },
+                data: { id: id },
+                dataType: 'json'
+            }).done(function (response) {
+                updateRows()
+                Swal.fire({
+                    title: '¡Éxito!',
+                    icon: 'success',
+                    text: response.message,
+                    showCloseButton: 'true',
+                    closeButtonText: 'Cerrar'
+                })
+                    .then(function () {
+                        $("#modal").addClass("hidden")
+                    })
+            }).fail(function (response) {
+                Swal.fire({
+                    title: 'Ha ocurrido un error!',
+                    icon: 'error',
+                    text: 'Inténtelo más tarde',
+                    showCloseButton: 'true',
+                    closeButtonText: 'Cerrar'
+                })
             })
+        })
 
-            //onclick new modal 
-            $("#modal-new").on('click', function () {
-                $("#modal-title").html("Nuevo registro")
-                $("#modal .border-red-500").removeClass("border-red-500")
+        //onclick new modal
+        $("#modal-new").on('click', function () {
+            $("#modal-title").html("Nuevo registro")
+            $("#modal .border-red-500").removeClass("border-red-500")
 
-                $("#modal-errors").empty()
+            $("#modal-errors").empty()
 
-                $('#id').val(0)
-                $('#id-container').addClass('hidden')
-                $('#nombre').val('')
-                $('#sinopsis').val('')
-                $('#image').val('')
-                $('#fecha-estreno').val('')
-                $('[data-toggle="datepicker"]').datepicker('setDate', null)
-                $('#nombres-alternativos').val('')
+            $('#id').val(0)
+            $('#id-container').addClass('hidden')
+            $('#nombre').val('')
+            $('#sinopsis').val('')
+            $('#imagen').val('')
+            $('#fecha-estreno').val('')
+            $('[data-toggle="datepicker"]').datepicker('setDate', null)
+            $('#nombres-alternativos').val('')
             $('#popularidad').val('')
             $('#puntuacion').val('')
             $('#estado').val(null).trigger('change')
@@ -389,95 +393,95 @@
             $('#estudios').val(null).trigger('change')
             $('#actores').val(null).trigger('change')
 
-                $("#actores-detail").empty()
-                $("#modal").removeClass('hidden')
-                $("#modal-delete").addClass('hidden')
-            })
+            $("#actores-detail").empty()
+            $("#modal").removeClass('hidden')
+            $("#modal-delete").addClass('hidden')
+        })
 
-            //onclick edit modal
-            $('#datatable tbody').on('click', 'tr', function () {
-                $("#modal-title").html("Editar registro")
-                var data = table.row(this).data();
+        //onclick edit modal
+        $('#datatable tbody').on('click', 'tr', function () {
+            $("#modal-title").html("Editar registro")
+            var data = table.row(this).data();
 
-                console.log(data)
+            console.log(data)
 
-                $("#modal .border-red-500").removeClass("border-red-500")
+            $("#modal .border-red-500").removeClass("border-red-500")
 
-                $("#modal-errors").empty()
+            $("#modal-errors").empty()
 
-                $('#id').val(data.ID)
-                $('#id-container').removeClass('hidden')
-                $('#nombre').val(data.Nombre)
-                $('#sinopsis').val(data.Sinopsis)
-                $('#image').val(data.Imagen)
-                $('#fecha-estreno').val(data.ID)
-                if (data.FechaEstreno) {
-                    $('[data-toggle="datepicker"]').datepicker('setDate', new Date(data.FechaEstreno))
-                }
-                else {
-                    $('#fecha-estreno').val('') 
-                }
-                $('#popularidad').val(data.Popularidad)
-                $('#puntuacion').val(data.Puntuacion)
-                $('#nombres-alternativos').val(data.NombreAlternativo.reduce(function (accum, current) {
-                    return accum + current.Nombre + ";"
-                }, '').slice(0, -1))
-                $('#estado').val(data.EstadoID).trigger('change')
-                $('#generos').val(data.AnimeGenero.map(item => item.Genero.ID)).trigger('change')
-                $('#estudios').val(data.AnimeEstudio.map(item => item.Estudio.ID)).trigger('change')
-                $('#actores').val(data.Personajes.map(item => item.Actor.ID)).trigger('change')
-                $("#modal-delete").removeClass('hidden')
+            $('#id').val(data.ID)
+            $('#id-container').removeClass('hidden')
+            $('#nombre').val(data.Nombre)
+            $('#sinopsis').val(data.Sinopsis)
+            $('#imagen').val(data.Imagen)
+            $('#fecha-estreno').val(data.ID)
+            if (data.FechaEstreno) {
+                $('[data-toggle="datepicker"]').datepicker('setDate', new Date(data.FechaEstreno))
+            }
+            else {
+                $('#fecha-estreno').val('')
+            }
+            $('#popularidad').val(data.Popularidad)
+            $('#puntuacion').val(data.Puntuacion)
+            $('#nombres-alternativos').val(data.NombreAlternativo.reduce(function (accum, current) {
+                return accum + current.Nombre + ";"
+            }, '').slice(0, -1))
+            $('#estado').val(data.EstadoID).trigger('change')
+            $('#generos').val(data.AnimeGenero.map(item => item.Genero.ID)).trigger('change')
+            $('#estudios').val(data.AnimeEstudio.map(item => item.Estudio.ID)).trigger('change')
+            $('#actores').val(data.Personajes.map(item => item.Actor.ID)).trigger('change')
+            $("#modal-delete").removeClass('hidden')
 
-                $("#actores-detail").empty()
-                data.Personajes.forEach(personaje => {
-                    
-                    var elements = `
+            $("#actores-detail").empty()
+            data.Personajes.forEach(personaje => {
+
+                var elements = `
                                     <div class="flex flex-wrap py-2" id="actor-${personaje.ActorID}">
                                         <p class="mr-3 w-1/2">Actor: ${personaje.Actor.Nombre}</p>
                                         <p class="mr-2">Personajes: </p><input class="rounded border border-gray-500 flex-1" name="actor-${personaje.ActorID}" value="${personaje.Nombre}"/>
                                     </div>
 `
-                    $("#actores-detail").append(elements)
-                })
-
-                $("#modal").removeClass('hidden')
+                $("#actores-detail").append(elements)
             })
 
+            $("#modal").removeClass('hidden')
+        })
 
-            var updateRows = function () {
-                $.ajax({
-                    url: "/Anime/Lista",
-                    headers: {
-                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
-                    },
-                }).done(function (response) {
-                    var dataArray = JSON.parse(response.data)
-                    table.clear()
-                    table.rows.add(dataArray)
-                    table.draw().columns.adjust()
-                        .responsive.recalc();
-                })
-            }
 
-            updateRows()
+        var updateRows = function () {
+            $.ajax({
+                url: "/Anime/Lista",
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                },
+            }).done(function (response) {
+                var dataArray = JSON.parse(response.data)
+                table.clear()
+                table.rows.add(dataArray)
+                table.draw().columns.adjust()
+                    .responsive.recalc();
+            })
+        }
 
-            //multi select
-            $('.multiselect').select2();
-            $('#actores').on('select2:select', function (e) {
-                var data = e.params.data;
-                var elements = `
+        updateRows()
+
+        //multi select
+        $('.multiselect').select2();
+        $('#actores').on('select2:select', function (e) {
+            var data = e.params.data;
+            var elements = `
                                     <div class="flex flex-wrap py-2" id="actor-${data.id}">
                                         <p class="mr-3 w-1/2">Actor: ${$(e.target).find(`[value=${data.id}]`).html()}</p>
                                         <p class="mr-2">Personajes: </p><input class="rounded border border-gray-500 flex-1" name="actor-${data.id}"/>
                                     </div>
 `
 
-                $("#actores-detail").append(elements)
-            });
-            $('#actores').on('select2:unselect', function (e) {
-                var data = e.params.data;
-                $("#actores-detail").find(`#actor-${data.id}`).remove()
-            });
-
+            $("#actores-detail").append(elements)
         });
-    </script>
+        $('#actores').on('select2:unselect', function (e) {
+            var data = e.params.data;
+            $("#actores-detail").find(`#actor-${data.id}`).remove()
+        });
+
+    });
+</script>

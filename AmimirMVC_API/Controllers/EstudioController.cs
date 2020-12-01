@@ -13,7 +13,7 @@ using static AmimirMVC_API.Controllers.Utils;
 
 namespace AmimirMVC_API.Controllers
 {
-    public class AnimeController : Controller
+    public class EstudioController : Controller
     {
         private string baseURL = "https://localhost:44300";
         HttpClient httpClient = new HttpClient();
@@ -23,30 +23,16 @@ namespace AmimirMVC_API.Controllers
         public ActionResult Index()
         {
             Token token = HttpContext.Session["token"] as Token;
-            if (token == null || token.ExpiresAt < DateTime.Now )
+            if (token == null || token.ExpiresAt < DateTime.Now)
             {
                 return RedirectToAction("Index", "Authentication");
             }
             ViewBag.IsAdmin = token.isAdmin;
 
-            httpClient.BaseAddress = new Uri(baseURL);
-            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-
-            string responseGenero = httpClient.GetAsync("/api/Generos").Result.Content.ReadAsStringAsync().Result;
-            ViewBag.Generos = JsonConvert.DeserializeObject<List<GeneroCLS>>(responseGenero);
-            string responseEstudio = httpClient.GetAsync("/api/Estudios").Result.Content.ReadAsStringAsync().Result;
-            ViewBag.Estudios = JsonConvert.DeserializeObject<List<EstudioCLS>>(responseEstudio);
-            string responseEstado = httpClient.GetAsync("/api/Estados").Result.Content.ReadAsStringAsync().Result;
-            ViewBag.Estados = JsonConvert.DeserializeObject<List<EstadoCLS>>(responseEstado);
-            string responseActor = httpClient.GetAsync("/api/Actores").Result.Content.ReadAsStringAsync().Result;
-            ViewBag.Actores = JsonConvert.DeserializeObject<List<ActorCLS>>(responseActor);
-
             return View();
         }
-        
-        
+
+
         public ActionResult Lista()
         {
             Token token = HttpContext.Session["token"] as Token;
@@ -60,7 +46,7 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            HttpResponseMessage response = httpClient.GetAsync("/api/Animes").Result;
+            HttpResponseMessage response = httpClient.GetAsync("/api/Estudios").Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -90,7 +76,7 @@ namespace AmimirMVC_API.Controllers
         }
 
         [HttpPost]
-        public ActionResult Guardar(AnimeCLS anime, List<int> generos, List<int> estudios, List<PersonajeCLS> personajes, List<string> nombresAlternativos)
+        public ActionResult Guardar(EstudioCLS estudio)
         {
             Token token = HttpContext.Session["token"] as Token;
             if (token == null || token.ExpiresAt < DateTime.Now)
@@ -101,14 +87,7 @@ namespace AmimirMVC_API.Controllers
             try
             {
 
-                int ID = anime.ID ?? 0;
-
-                AnimeWrapper req = new AnimeWrapper();
-                req.Anime = anime;
-                req.Generos = generos ?? new List<int>();
-                req.Estudios = estudios ?? new List<int>();
-                req.Personajes = personajes ?? new List<PersonajeCLS>();
-                req.NombresAlternativos = nombresAlternativos ?? new List<string>();
+                int ID = estudio.ID ?? 0;
 
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(baseURL);
@@ -116,19 +95,19 @@ namespace AmimirMVC_API.Controllers
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-                string reqJson = JsonConvert.SerializeObject(req);
+                string reqJson = JsonConvert.SerializeObject(estudio);
                 HttpContent body = new StringContent(reqJson, Encoding.UTF8, "application/json");
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync("/api/Animes", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync("/api/Estudios", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
                                 new
                                 {
                                     success = true,
-                                    message = "Anime creado satisfactoriamente"
+                                    message = "Estudio creado satisfactoriamente",
                                 }, JsonRequestBehavior.AllowGet);
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -138,18 +117,18 @@ namespace AmimirMVC_API.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = httpClient.PutAsync($"/api/Animes/{ID}", body).Result;
+                    HttpResponseMessage response = httpClient.PutAsync($"/api/Estudios/{ID}", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
                                 new
                                 {
                                     success = true,
-                                    message = "Anime modificado satisfactoriamente"
+                                    message = "Estudio modificado satisfactoriamente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
                 }
-                throw new Exception("Error desconocido al guardar anime");
+                throw new Exception("Error desconocido al guardar el estudio");
             }
             catch (Exception e)
             {
@@ -181,21 +160,30 @@ namespace AmimirMVC_API.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
-                HttpResponseMessage response = httpClient.DeleteAsync($"/api/Animes/{ID}").Result;
+                HttpResponseMessage response = httpClient.DeleteAsync($"/api/Estudios/{ID}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(
                             new
                             {
                                 success = true,
-                                message = "Anime eliminado satisfactoriamente"
+                                message = "Usuario eliminado satisfactoriamente"
                             }, JsonRequestBehavior.AllowGet);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Index", "Authentication");
                 }
-                throw new Exception("Error desconocido al borrar anime");
+                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    return Json(
+                       new
+                       {
+                           success = false,
+                           message = "Este estudio no puede ser borrado porque tiene animes asociados"
+                       }, JsonRequestBehavior.AllowGet);
+                }
+                throw new Exception("Error desconocido al borrar estudio");
             }
             catch (Exception e)
             {

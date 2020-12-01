@@ -7,7 +7,8 @@ namespace AmimirMVC_API.Models
 {
     public class EstudioCLS
     {
-        public int ID { get; set; }
+        public Nullable<int> ID { get; set; }
         public string Nombre { get; set; }
+        public string Imagen { get; set; }
     }
 }

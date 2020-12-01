@@ -1,0 +1,281 @@
+﻿@Html.AntiForgeryToken()
+
+@{
+    ViewBag.Title = "Estudio";
+}
+
+<div id="modal" class="hidden fixed z-50 inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+    <div class="bg-white text-lg p-8 rounded flex space-y-2 flex-col w-8/12" style="max-height: 75vh">
+        <div class="flex justify-between items-center">
+            <h2 id="modal-title" class="font-bold text-2xl flex-1">Titulo</h2>
+            <button id="modal-cancel" class="border p-1 px-2 mx-2 rounded">Cerrar</button>
+            @if (ViewBag.isAdmin)
+            {
+                <button id="modal-delete" class="border bg-red-500 text-white p-1 px-2 mx-2 rounded">Borrar</button>
+                <button id="modal-save" class="border bg-indigo-500 text-white p-1 px-2 mx-2 rounded">Guardar</button>
+            }
+
+        </div>
+
+        <form id="modal-form" class="overflow-auto flex space-y-2 flex-col">
+            <ul id="modal-errors" class="text-red-700">
+            </ul>
+            <div id="id-container">
+                <h3>ID</h3>
+                <input id="id" name="id" class="border w-1/4" readonly type="text" />
+            </div>
+            <div class="md:flex md:space-x-10">
+                <div class="w-full md:w-1/2">
+                    <h3>Nombre</h3>
+                    <input id="nombre" name="nombre" class="border rounded w-full" type="text" />
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h3>Imagen</h3>
+                    <input id="imagen" name="imagen" class="border rounded w-full" type="text" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="bg-gray-100 text-gray-900 tracking-wider flex-1 leading-normal">
+    <!--Container-->
+    <div class="container w-full md:w-4/5 xl:w-3/5  mx-auto px-2">
+
+        <!--Title-->
+        <div class="flex items-center justify-between">
+
+            <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
+                Datos de Estudios
+            </h1>
+            @if (ViewBag.isAdmin)
+            {
+                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Crear Nuevo</button>
+            }
+
+        </div>
+
+
+        <!--Card-->
+        <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+            <table id="datatable" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+
+
+        </div>
+        <!--/Card-->
+
+
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        // tables
+        var table = $('#datatable').DataTable({
+            "language": {
+                "decimal": "",
+                "emptyTable": "No hay datos disponibles",
+                "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+                "infoEmpty": "Mostrando 0 registros",
+                "infoFiltered": "(filtrados de un total de _MAX_ registros)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Registros por página _MENU_ ",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "No se encontraron coincidencias",
+                "paginate": {
+                    "first": "Primera",
+                    "last": "Última",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+                "aria": {
+                    "sortAscending": ": activate to sort column ascending",
+                    "sortDescending": ": activate to sort column descending"
+                }
+            },
+            "columns": [
+                { name: "id", title: "ID", data: 'ID' },
+                { name: "nombre", title: "Nombre", data: 'Nombre' },
+                { name: "imagen", title: "Imagen", data: 'Imagen' },
+            ],
+            responsive: true,
+        })
+            .columns.adjust()
+            .responsive.recalc();
+
+        //onclick close modal
+        $("#modal-cancel").on('click', function () {
+            $("#modal").addClass('hidden')
+        })
+
+        //onclick save modal
+        $("#modal-save").on('click', function () {
+            var error = false,
+                id = $("#id").val(),
+                nombre = $("#nombre").val(),
+                imagen = $("#imagen").val()
+
+
+            $("#modal .border-red-500").removeClass("border-red-500")
+
+            $("#modal-errors").empty()
+
+            if (!nombre) {
+                error = true
+                $("#modal-errors").append("<li>Nombre no puede ser vacío</li>")
+                $("#nombre").addClass("border-red-500")
+            }
+
+            if (!error) {
+                const req = {
+                    ID: id,
+                    Nombre: nombre,
+                    Imagen: imagen,
+                }
+
+                $.ajax({
+                    url: "/Estudio/Guardar",
+                    method: "POST",
+                    headers: {
+                        "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    data: req,
+                    dataType: 'json'
+                }).done(function (response) {
+                    updateRows()
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        icon: 'success',
+                        text: response.message,
+                        showCloseButton: 'true',
+                        closeButtonText: 'Cerrar'
+                    })
+                        .then(function () {
+                            $("#modal").addClass("hidden")
+                        })
+                }).fail(function (response) {
+                    Swal.fire({
+                        title: 'Ha ocurrido un error!',
+                        icon: 'error',
+                        text: 'Inténtelo más tarde',
+                        showCloseButton: 'true',
+                        closeButtonText: 'Cerrar'
+                    })
+                })
+
+            }
+
+        })
+
+        //onclick delete modal
+        $("#modal-delete").on("click", function () {
+            var id = $("#id").val()
+
+            $.ajax({
+                url: "/Estudio/Eliminar/",
+                method: "POST",
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                },
+                data: { id: id },
+                dataType: 'json'
+            }).done(function (response) {
+                if (response.success) {
+                    updateRows()
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        icon: 'success',
+                        text: response.message,
+                        showCloseButton: 'true',
+                        closeButtonText: 'Cerrar'
+                    })
+                        .then(function () {
+                            $("#modal").addClass("hidden")
+                        })
+                }
+                else {
+                    Swal.fire({
+                        title: 'Ha ocurrido un error!',
+                        icon: 'error',
+                        text: response.message,
+                        showCloseButton: 'true',
+                        closeButtonText: 'Cerrar'
+                    })
+                }
+                
+            }).fail(function (response) {
+                Swal.fire({
+                    title: 'Ha ocurrido un error!',
+                    icon: 'error',
+                    text: 'Inténtelo más tarde',
+                    showCloseButton: 'true',
+                    closeButtonText: 'Cerrar'
+                })
+            })
+        })
+
+        //onclick new modal
+        $("#modal-new").on('click', function () {
+            $("#modal-title").html("Nuevo registro")
+            $("#modal .border-red-500").removeClass("border-red-500")
+
+            $("#modal-errors").empty()
+
+            $('#id').val(0)
+            $('#id-container').addClass('hidden')
+            $('#nombre').val('')
+            $('#imagen').val('')
+
+            $("#modal").removeClass('hidden')
+            $("#modal-delete").addClass('hidden')
+        })
+
+        //onclick edit modal
+        $('#datatable tbody').on('click', 'tr', function () {
+            $("#modal-title").html("Editar registro")
+            var data = table.row(this).data();
+
+
+            $("#modal .border-red-500").removeClass("border-red-500")
+
+            $("#modal-errors").empty()
+
+            $('#id').val(data.ID)
+            $('#id-container').removeClass('hidden')
+            $('#nombre').val(data.Nombre)
+           
+            $('#imagen').val(data.Imagen)
+            $("#modal-delete").removeClass('hidden')
+            $("#modal").removeClass('hidden')
+        })
+
+
+        var updateRows = function () {
+            $.ajax({
+                url: "/Estudio/Lista",
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                },
+            }).done(function (response) {
+                var dataArray = JSON.parse(response.data)
+                table.clear()
+                table.rows.add(dataArray)
+                table.draw().columns.adjust()
+                    .responsive.recalc();
+            })
+        }
+
+        updateRows()       
+
+    });
+</script>
