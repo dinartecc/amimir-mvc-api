@@ -13,6 +13,7 @@ using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
+    [Authorize]
     public class GenerosController : ApiController
     {
         private AmimirEntities1 db = new AmimirEntities1();
