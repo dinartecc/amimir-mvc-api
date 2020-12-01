@@ -7,7 +7,7 @@ namespace AmimirMVC_API.Models
 {
     public class ActorCLS
     {
-        public int ID { get; set; }
+        public Nullable<int> ID { get; set; }
         public string Nombre { get; set; }
     }
 }

@@ -14,6 +14,7 @@ using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
+
     public class TokenController : ApiController
     {
         private AmimirEntities1 db = new AmimirEntities1();

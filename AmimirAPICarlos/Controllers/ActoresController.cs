@@ -13,6 +13,7 @@ using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
+    [Authorize]
     public class ActoresController : ApiController
     {
         private AmimirEntities1 db = new AmimirEntities1();
@@ -110,9 +111,19 @@ namespace AmimirAPICarlos.Controllers
             {
                 return NotFound();
             }
-
-            db.Actor.Remove(actor);
-            db.SaveChanges();
+            try
+            {
+                db.Actor.Remove(actor);
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                return Conflict();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
 
             return Ok(actor);
         }

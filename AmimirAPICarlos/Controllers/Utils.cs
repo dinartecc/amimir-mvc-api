@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace AmimirAPICarlos.Controllers
 {
+    
     public class Utils
     {
         public static string sha256(string randomString)

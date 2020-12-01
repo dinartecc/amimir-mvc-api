@@ -112,8 +112,20 @@ namespace AmimirAPICarlos.Controllers
                 return NotFound();
             }
 
-            db.Genero.Remove(genero);
-            db.SaveChanges();
+
+            try
+            {
+                db.Genero.Remove(genero);
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                return Conflict();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
 
             return Ok(genero);
         }

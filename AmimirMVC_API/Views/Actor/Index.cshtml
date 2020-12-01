@@ -1,7 +1,7 @@
 ﻿@Html.AntiForgeryToken()
 
 @{
-    ViewBag.Title = "Paquete";
+    ViewBag.Title = "Actor";
 }
 
 <div id="modal" class="hidden fixed z-50 inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
@@ -29,14 +29,6 @@
                     <h3>Nombre</h3>
                     <input id="nombre" name="nombre" class="border rounded w-full" type="text" />
                 </div>
-                <div class="w-full md:w-1/2">
-                    <h3>Duracion</h3>
-                    <input id="duracion" name="duracion" class="border rounded w-full" type="text" />
-                </div>
-                <div class="w-full md:w-1/2">
-                    <h3>Precio</h3>
-                    <input id="precio" name="precio" class="border rounded w-full" type="text" />
-                </div>
             </div>
 
         </form>
@@ -50,11 +42,11 @@
         <div class="flex items-center justify-between">
 
             <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
-                Datos de Paquetes
+                Datos de Actores
             </h1>
             @if (ViewBag.isAdmin)
             {
-                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Crear nuevo paquete</button>
+                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar Nuevo</button>
             }
 
         </div>
@@ -123,8 +115,7 @@
             "columns": [
                 { name: "id", title: "ID", data: 'ID' },
                 { name: "nombre", title: "Nombre", data: 'Nombre' },
-                { name: "duracion", title: "Duracion", data: 'Duracion' },
-                { name: "precio", title: "Precio", data: 'Precio' }
+
             ],
             responsive: true,
         })
@@ -140,9 +131,7 @@
         $("#modal-save").on('click', function () {
             var error = false,
                 id = $("#id").val(),
-                nombre = $("#nombre").val(),
-                duracion = $("#duracion").val(),
-                precio = $("#precio").val()
+                nombre = $("#nombre").val()
 
 
             $("#modal .border-red-500").removeClass("border-red-500")
@@ -154,31 +143,21 @@
                 $("#modal-errors").append("<li>Nombre no puede ser vacío</li>")
                 $("#nombre").addClass("border-red-500")
             }
-            if (!duracion) {
-                error = true
-                $("#modal-errors").append("<li>Duracion no puede ser vacío</li>")
-                $("#duracion").addClass("border-red-500")
-            }
-            if (!precio) {
-                error = true
-                $("#modal-errors").append("<li>Precio no puede ser vacío</li>")
-                $("#precio").addClass("border-red-500")
-            }
+           
+
             if (!error) {
                 const req = {
-                    paquete: {
+                    actor: {
                         ID: id,
-                        Nombre: nombre,
-                        Duracion: duracion,
-                        Precio: precio
+                        Nombre: nombre
                     }
-
+                  
                 }
 
 
 
                 $.ajax({
-                    url: "/Paquete/Guardar",
+                    url: "/Actor/Guardar",
                     method: "POST",
                     headers: {
                         "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
@@ -216,7 +195,7 @@
             var id = $("#id").val()
 
             $.ajax({
-                url: "/Paquete/Eliminar/",
+                url: "/Actor/Eliminar/",
                 method: "POST",
                 headers: {
                     "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
@@ -256,8 +235,6 @@
             $('#id').val(0)
             $('#id-container').addClass('hidden')
             $('#nombre').val('')
-            $('#duracion').val('')
-            $('#precio').val('')
 
             $("#modal").removeClass('hidden')
             $("#modal-delete").addClass('hidden')
@@ -278,19 +255,17 @@
             $('#id').val(data.ID)
             $('#id-container').removeClass('hidden')
             $('#nombre').val(data.Nombre)
-            $('#duracion').val(data.Duracion)
-            $('#precio').val(data.Precio)
-
+          
             $("#modal-delete").removeClass('hidden')
 
-
+           
             $("#modal").removeClass('hidden')
         })
 
 
         var updateRows = function () {
             $.ajax({
-                url: "/Paquete/Lista",
+                url: "/Actor/Lista",
                 headers: {
                     "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
                 },

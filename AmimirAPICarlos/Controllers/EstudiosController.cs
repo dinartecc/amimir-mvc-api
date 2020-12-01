@@ -12,6 +12,7 @@ using AmimirAPICarlos.Models;
 
 namespace AmimirAPICarlos.Controllers
 {
+    [Authorize]
     public class EstudiosController : ApiController
     {
         private AmimirEntities1 db = new AmimirEntities1();

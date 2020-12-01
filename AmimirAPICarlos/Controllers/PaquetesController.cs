@@ -13,6 +13,7 @@ using static AmimirAPICarlos.Controllers.Utils;
 
 namespace AmimirAPICarlos.Controllers
 {
+    [Authorize]
     public class PaquetesController : ApiController
     {
         private AmimirEntities1 db = new AmimirEntities1();
