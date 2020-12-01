@@ -9,35 +9,42 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using static AmimirMVC_API.Controllers.Utils;
 
 namespace AmimirMVC_API.Controllers
 {
     public class PaqueteController : Controller
     {
         private string baseURL = "https://localhost:44300";
+        HttpClient httpClient = new HttpClient();
 
-        private bool UsuarioAutenticado()
-        {
-            return HttpContext.Session["token"] != null;
-        }
 
-        // GET: Anime
+        // GET: Paquete
         public ActionResult Index()
         {
-            if (!UsuarioAutenticado())
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
             {
                 return RedirectToAction("Index", "Authentication");
             }
+            ViewBag.IsAdmin = token.isAdmin;
+
             return View();
         }
 
+
         public ActionResult Lista()
         {
-            HttpClient httpClient = new HttpClient();
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             httpClient.BaseAddress = new Uri(baseURL);
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
             HttpResponseMessage response = httpClient.GetAsync("/api/Paquetes").Result;
 
@@ -46,39 +53,50 @@ namespace AmimirMVC_API.Controllers
                 return RedirectToAction("Index", "Authentication");
             }
 
+            if (!response.IsSuccessStatusCode)
+            {
+                return Json(
+                        new
+                        {
+                            success = false,
+                        }, JsonRequestBehavior.AllowGet);
+            }
+
             string data = response.Content.ReadAsStringAsync().Result;
-            List<PaqueteCLS> paquetes = JsonConvert.DeserializeObject<List<PaqueteCLS>>(data);
 
             return Json(
                 new
                 {
                     success = true,
-                    data = paquetes,
+                    data = data,
                     message = "done"
                 },
                 JsonRequestBehavior.AllowGet
                 );
         }
 
-        public ActionResult Guardar(int ID, string Nombre, int Duracion, decimal Precio)
+        [HttpPost]
+        public ActionResult Guardar(PaqueteCLS paquete)
         {
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             try
             {
-                PaqueteCLS paquete = new PaqueteCLS();
-                paquete.ID = ID;
-                paquete.Nombre = Nombre;
-                paquete.Duracion = Duracion;
-                paquete.Precio = Precio;
+
+                int ID = paquete.ID ?? 0;
 
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(baseURL);
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-
-                string paqueteJson = JsonConvert.SerializeObject(paquete);
-                HttpContent body = new StringContent(paqueteJson, Encoding.UTF8, "application/json");
+                string reqJson = JsonConvert.SerializeObject(paquete);
+                HttpContent body = new StringContent(reqJson, Encoding.UTF8, "application/json");
 
                 if (ID == 0)
                 {
@@ -89,10 +107,10 @@ namespace AmimirMVC_API.Controllers
                                 new
                                 {
                                     success = true,
-                                    message = "Paquete creado satisfactoriamente"
+                                    message = "Paquete creado satisfactoriamente",
                                 }, JsonRequestBehavior.AllowGet);
                     }
-                    else
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
                         return RedirectToAction("Index", "Authentication");
                     }
@@ -109,12 +127,8 @@ namespace AmimirMVC_API.Controllers
                                     message = "Paquete modificado satisfactoriamente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
-                    else
-                    {
-                        return RedirectToAction("Index", "Authentication");
-                    }
                 }
-                throw new Exception("Error desconocido al guardar paquete");
+                throw new Exception("Error desconocido al guardar el paquete");
             }
             catch (Exception e)
             {
@@ -127,16 +141,14 @@ namespace AmimirMVC_API.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult Eliminar(int ID)
         {
-            if (!UsuarioAutenticado())
+
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
             {
-                return Json(
-                        new
-                        {
-                            success = false,
-                            message = "Usuario no autenticado"
-                        }, JsonRequestBehavior.AllowGet);
+                return RedirectToAction("Index", "Authentication");
             }
 
             try
@@ -145,7 +157,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.BaseAddress = new Uri(baseURL);
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
                 HttpResponseMessage response = httpClient.DeleteAsync($"/api/Paquetes/{ID}").Result;
@@ -158,12 +170,20 @@ namespace AmimirMVC_API.Controllers
                                 message = "Paquete eliminado satisfactoriamente"
                             }, JsonRequestBehavior.AllowGet);
                 }
-                else
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Index", "Authentication");
-
                 }
-                throw new Exception("Error desconocido al borrar paquete");
+                else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    return Json(
+                       new
+                       {
+                           success = false,
+                           message = "Paquete en uso"
+                       }, JsonRequestBehavior.AllowGet);
+                }
+                throw new Exception("Error desconocido al borrar el paquete");
             }
             catch (Exception e)
             {
@@ -175,5 +195,9 @@ namespace AmimirMVC_API.Controllers
                        }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
+
     }
 }
