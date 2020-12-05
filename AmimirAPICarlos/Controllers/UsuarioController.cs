@@ -56,6 +56,11 @@ namespace AmimirAPICarlos.Controllers
                 return Unauthorized();
             }
 
+            if( id == 1 && !isOwnUsername(id))
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
