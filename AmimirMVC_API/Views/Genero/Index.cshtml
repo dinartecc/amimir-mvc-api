@@ -42,11 +42,11 @@
         <div class="flex items-center justify-between">
 
             <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
-                Datos de Actores
+                Datos de Géneros
             </h1>
             @if (ViewBag.isAdmin)
             {
-                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar Nuevo</button>
+                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar nuevo género</button>
             }
 
         </div>
@@ -103,15 +103,6 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
-            "columnDefs": [
-                {
-                    "targets": [2],
-                    "render": function (data) {
-                        var x = moment(data)
-                        return x.isValid() ? moment(data).format('D/M/YYYY') : '---'
-                    }
-                }
-            ],
             "columns": [
                 { name: "id", title: "ID", data: 'ID' },
                 { name: "nombre", title: "Nombre", data: 'Nombre' },

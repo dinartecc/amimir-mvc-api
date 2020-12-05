@@ -8,11 +8,15 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using AmimirMVC_API.Models;
+using System.Configuration;
+using Newtonsoft.Json;
 
 namespace AmimirMVC_API.Controllers
 {
     public class Utils
     {
+        private static string baseURL = "https://localhost:44300";
+        private static string basePath = "/";
         public static string sha256(string randomString)
         {
             var crypt = new SHA256Managed();
@@ -38,6 +42,36 @@ namespace AmimirMVC_API.Controllers
             }
 
             return 1;
+        }
+
+        public static Token RefrescarToken ( Token token )
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(baseURL);
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            client.DefaultRequestHeaders.Accept.Add(contentType);
+
+            var req = new RefRequestCLS();
+            req.ClientSecret = ConfigurationManager.AppSettings["CLIENT_SECRET"];
+            req.RefreshToken = token.RefreshToken;
+
+            string stringData = JsonConvert.SerializeObject(req);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = client.PostAsync(basePath + "api/RefreshToken", contentData).Result;
+
+            string stringJWT = response.Content.ReadAsStringAsync().Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return token;
+            }
+
+            var newToken = JsonConvert.DeserializeObject<Token>(stringJWT);
+
+            newToken.Username = token.Username;
+
+            return newToken;
         }
     }
 }

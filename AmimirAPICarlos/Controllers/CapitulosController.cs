@@ -53,7 +53,6 @@ namespace AmimirAPICarlos.Controllers
            
             var capitulo = Req.Capitulo;
             capitulo.ID = id;
-            capitulo.FechaPublicado = DateTime.Now;
             var URLAlternativos = Req.urlAlternativos;
 
             db.UrlAlternativo.RemoveRange(db.UrlAlternativo.Where(x => x.CapituloID == id));
@@ -83,6 +82,10 @@ namespace AmimirAPICarlos.Controllers
                 {
                     throw;
                 }
+            }
+            catch
+            {
+                return InternalServerError();
             }
 
             return StatusCode(HttpStatusCode.NoContent);

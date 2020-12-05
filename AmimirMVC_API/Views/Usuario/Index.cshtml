@@ -1,7 +1,7 @@
 ﻿@Html.AntiForgeryToken()
 
 @{
-    ViewBag.Title = "Actor";
+    ViewBag.Title = "Usuario";
 }
 
 <div id="modal" class="hidden fixed z-50 inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
@@ -29,6 +29,30 @@
                     <h3>Nombre</h3>
                     <input id="nombre" name="nombre" class="border rounded w-full" type="text" />
                 </div>
+                <div class="w-full md:w-1/2">
+                    <h3>Fecha de Nacimiento</h3>
+                    <input id="fecha-nacimiento" name="fecha-nacimiento" class="border rounded w-full" data-toggle="datepicker">
+                </div>
+            </div>
+            <div class="md:flex md:space-x-10">
+                <div class="w-full md:w-1/2">
+                    <h3>Usuario</h3>
+                    <input id="usuario" name="usuario" class="border rounded w-full" type="text" />
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h3>Correo Electrónico</h3>
+                    <input id="correo" name="correo" class="border rounded w-full" type="text" />
+                </div>
+            </div>
+            <div class="md:flex md:space-x-10">
+                <div class="w-full md:w-1/2">
+                    <h3>Contraseña <span id="hide-contrasena">(en blanco si no se desea cambiar)</span></h3>
+                    <input id="contrasena" name="contrasena" class="border rounded w-full" type="password" />
+                </div>
+                <div class="w-full md:w-1/2 pt-2">
+                    <input type="checkbox" id="admin" name="admin" value="admin">
+                    <label for="admin"> Administrador</label>
+                </div>
             </div>
 
         </form>
@@ -42,11 +66,11 @@
         <div class="flex items-center justify-between">
 
             <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
-                Datos de Actores
+                Datos de Usuario
             </h1>
             @if (ViewBag.isAdmin)
             {
-                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar nuevo actor</button>
+                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar nuevo usuario</button>
             }
 
         </div>
@@ -105,8 +129,8 @@
             },
             "columns": [
                 { name: "id", title: "ID", data: 'ID' },
+                { name: "usuario", title: "Usuario", data: 'Username'},
                 { name: "nombre", title: "Nombre", data: 'Nombre' },
-
             ],
             responsive: true,
         })
@@ -121,9 +145,14 @@
         //onclick save modal
         $("#modal-save").on('click', function () {
             var error = false,
-                id = $("#id").val(),
-                nombre = $("#nombre").val()
-
+                id = $('#id').val(),
+                nombre = $("#nombre").val(),
+                usuario = $('#usuario').val(),
+                correo = $('#correo').val(),
+                admin = $('#admin').prop('checked'),
+                fechaNacimiento = moment($("#fecha-nacimiento").val(), 'DD/MM/YYYY', true),
+                fechaString = $("#fecha-nacimiento").val(),
+                contrasena = $('#contrasena').val()
 
             $("#modal .border-red-500").removeClass("border-red-500")
 
@@ -134,18 +163,66 @@
                 $("#modal-errors").append("<li>Nombre no puede ser vacío</li>")
                 $("#nombre").addClass("border-red-500")
             }
-           
+
+            if (fechaString !== '' && !fechaNacimiento.isValid()) {
+                error = true
+                $("#modal-errors").append("<li>Ingrese una fecha válida</li>")
+                $("#fecha-nacimiento").addClass("border-red-500")
+            }
+
+            if ( usuario.length < 4) {
+                error = true
+                $("#modal-errors").append("<li>Usuario debe de tener al menos 4 caracteres</li>")
+                $("#usuario").addClass("border-red-500")
+            }
+
+            if (/\W/.test(usuario)) {
+                error = true
+                $("#modal-errors").append("<li>Usuario no debe de tener caracteres especiales</li>")
+                $("#usuario").addClass("border-red-500")
+            }
+
+            if (!correo) {
+                error = true
+                $("#modal-errors").append("<li>Correo no puede ser vacío</li>")
+                $("#correo").addClass("border-red-500")
+            }
+
+            if (correo && !/^[\w-\.]+@@([\w-]+\.)+[\w-]{2,4}$/.test(correo)) {
+                error = true
+                $("#modal-errors").append("<li>Correo tiene que ser válido</li>")
+                $("#correo").addClass("border-red-500")
+            }
+
+            if (id == 0 && contrasena.length == 0) {
+                error = true
+                $("#modal-errors").append("<li>Contraseña debe de tener al menos 6 caracteres</li>")
+                $("#contrasena").addClass("border-red-500")
+            }
+
+            if ( contrasena.length != 0 && contrasena.length < 6) {
+                error = true
+                $("#modal-errors").append("<li>Contraseña debe de tener al menos 6 caracteres</li>")
+                $("#contrasena").addClass("border-red-500")
+            }
 
             if (!error) {
                 const req = {
-                    actor: {
-                        ID: id,
-                        Nombre: nombre
-                    }
-                  
+                    ID: id,
+                    Nombre: nombre,
+                    Username: usuario,
+                    Contrasena: contrasena,
+                    CorreoElectronico: correo,
                 }
+
+                console.log(req)
+
+                if (fechaString !== '') {
+                    req.FechaNacimiento = fechaNacimiento.toISOString()
+                }
+
                 $.ajax({
-                    url: "/Actor/Guardar",
+                    url: "/Usuario/Guardar",
                     method: "POST",
                     headers: {
                         "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
@@ -175,7 +252,6 @@
                             closeButtonText: 'Cerrar'
                         })
                     }
-                   
                 }).fail(function (response) {
                     Swal.fire({
                         title: 'Ha ocurrido un error!',
@@ -195,7 +271,7 @@
             var id = $("#id").val()
 
             $.ajax({
-                url: "/Actor/Eliminar/",
+                url: "/Usuario/Eliminar/",
                 method: "POST",
                 headers: {
                     "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
@@ -225,6 +301,7 @@
                         closeButtonText: 'Cerrar'
                     })
                 }
+
             }).fail(function (response) {
                 Swal.fire({
                     title: 'Ha ocurrido un error!',
@@ -243,13 +320,21 @@
 
             $("#modal-errors").empty()
 
+            $("#hide-contrasena").addClass('hidden')
+
             $('#id').val(0)
             $('#id-container').addClass('hidden')
             $('#nombre').val('')
+            $('#usuario').val('')
+            $('#correo').val('')
+            $('#admin').prop('checked', '')
+            $('#fecha-nacimiento').val('')
+            $('[data-toggle="datepicker"]').datepicker('setDate', null)
+            $('#contrasena').val('')
+            $('#admin').prop('disabled', false)
 
             $("#modal").removeClass('hidden')
             $("#modal-delete").addClass('hidden')
-
         })
 
         //onclick edit modal
@@ -257,26 +342,45 @@
             $("#modal-title").html("Editar registro")
             var data = table.row(this).data();
 
-            console.log(data)
 
             $("#modal .border-red-500").removeClass("border-red-500")
 
             $("#modal-errors").empty()
 
+            $("#hide-contrasena").removeClass('hidden')
+
             $('#id').val(data.ID)
             $('#id-container').removeClass('hidden')
             $('#nombre').val(data.Nombre)
-          
-            $("#modal-delete").removeClass('hidden')
+            $('#usuario').val(data.Username)
+            $('#correo').val(data.CorreoElectronico)
+            $('#admin').prop('checked', data.isAdmin)
+            $('#contrasena').val('')
 
-           
+            $("#modal-delete").removeClass('hidden')
+            $('#admin').prop('disabled', false)
+
+            if (data.ID == 1) {
+                $('#admin').prop('disabled', true)
+                $('#modal-delete').addClass('hidden')
+            }
+
+
+            if (data.FechaNacimiento) {
+                $('[data-toggle="datepicker"]').datepicker('setDate', new Date(data.FechaEstreno))
+            }
+            else {
+                $('#fecha-estreno').val('')
+            }
+
+            
             $("#modal").removeClass('hidden')
         })
 
 
         var updateRows = function () {
             $.ajax({
-                url: "/Actor/Lista",
+                url: "/Usuario/Lista",
                 headers: {
                     "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
                 },
@@ -290,7 +394,6 @@
         }
 
         updateRows()
-
 
     });
 </script>

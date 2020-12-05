@@ -13,35 +13,60 @@ using static AmimirMVC_API.Controllers.Utils;
 
 namespace AmimirMVC_API.Controllers
 {
-    public class UserController : Controller
+    public class UsuarioController : Controller
     {
         private string baseURL = "https://localhost:44300";
         private string basePath = "/";
-
-        private bool UsuarioAutenticado()
-        {
-            return HttpContext.Session["token"] != null;
-        }
+        HttpClient httpClient = new HttpClient();
 
 
-        // GET: User
+        // GET: Anime
         public ActionResult Index()
         {
-            if (!UsuarioAutenticado())
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || !token.isAdmin)
             {
                 return RedirectToAction("Index", "Authentication");
             }
+
+
+            if (token.ExpiresAt < DateTime.Now)
+            {
+                var newToken = RefrescarToken(token);
+                if (newToken.AccessToken == token.AccessToken)
+                {
+                    HttpContext.Session.Abandon();
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    HttpContext.Session["token"] = newToken;
+                }
+
+            }
+            else if (token.ExpiresAt.AddMinutes(-10) < DateTime.Now)
+            {
+                HttpContext.Session["token"] = RefrescarToken(token);
+            }
+
+            ViewBag.IsAdmin = token.isAdmin;
+
             return View();
         }
 
+
         public ActionResult Lista()
         {
-            HttpClient httpClient = new HttpClient();
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now || !token.isAdmin)
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             httpClient.BaseAddress = new Uri(baseURL);
             httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
             HttpResponseMessage response = httpClient.GetAsync(basePath + "api/Usuario").Result;
 
@@ -50,63 +75,71 @@ namespace AmimirMVC_API.Controllers
                 return RedirectToAction("Index", "Authentication");
             }
 
-            string data = response.Content.ReadAsStringAsync().Result;
-            List<UserCLS> usuarios = JsonConvert.DeserializeObject<List<UserCLS>>(data);
-
-            return Json(
-                new {
-                    success = true,
-                    data = usuarios,
-                    message = "done"
-                },
-                JsonRequestBehavior.AllowGet
-                ); 
-        }
-
-        public ActionResult Guardar( int ID, string Nombre, DateTime? FechaNacimiento, string Username, string CorreoElectronico, string Contrasena)
-        {   
-            if (!UsuarioAutenticado())
+            if (!response.IsSuccessStatusCode)
             {
                 return Json(
                         new
                         {
                             success = false,
-                            message = "Usuario no autenticado"
                         }, JsonRequestBehavior.AllowGet);
             }
+
+            string data = response.Content.ReadAsStringAsync().Result;
+
+            return Json(
+                new
+                {
+                    success = true,
+                    data = data,
+                    message = "done"
+                },
+                JsonRequestBehavior.AllowGet
+                );
+        }
+
+        [HttpPost]
+        public ActionResult Guardar(UserCLS user)
+        {
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
             try
             {
-                UserCLS usuario = new UserCLS();
-                usuario.ID = ID;
-                usuario.Nombre = Nombre;
-                usuario.FechaNacimiento = FechaNacimiento;
-                usuario.Username = Username;
-                usuario.CorreoElectronico = CorreoElectronico;
-                usuario.Contrasena = sha256(Contrasena);
+
+                int ID = user.ID;
+
+                if(user.ID == 1)
+                {
+                    user.isAdmin = true;
+                }
 
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(baseURL);
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-                string usuarioJson = JsonConvert.SerializeObject(usuario);
-                HttpContent body = new StringContent(usuarioJson, Encoding.UTF8, "application/json");
+                string reqJson = JsonConvert.SerializeObject(user);
+                HttpContent body = new StringContent(reqJson, Encoding.UTF8, "application/json");
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync(basePath +"api/Usuario", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(basePath + "api/Usuario", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
-                                new {
+                                new
+                                {
                                     success = true,
                                     message = "Usuario creado satisfactoriamente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
-                    else
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
-                        return RedirectToAction("Index", "Authentication"); 
+                        return RedirectToAction("Index", "Authentication");
                     }
                 }
                 else
@@ -121,12 +154,8 @@ namespace AmimirMVC_API.Controllers
                                     message = "Usuario modificado satisfactoriamente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
-                    else
-                    {
-                        return RedirectToAction("Index", "Authentication");
-                    }
                 }
-                throw new Exception("Error desconocido al guardar usuario");
+                throw new Exception("Error desconocido al guardar Usuario");
             }
             catch (Exception e)
             {
@@ -139,16 +168,24 @@ namespace AmimirMVC_API.Controllers
             }
         }
 
-        public ActionResult Eliminar ( int ID )
+        [HttpPost]
+        public ActionResult Eliminar(int ID)
         {
-            if (!UsuarioAutenticado())
+
+            Token token = HttpContext.Session["token"] as Token;
+            if (token == null || token.ExpiresAt < DateTime.Now)
+            {
+                return RedirectToAction("Index", "Authentication");
+            }
+
+            if (ID == 1)
             {
                 return Json(
-                        new
-                        {
-                            success = false,
-                            message = "Usuario no autenticado"
-                        }, JsonRequestBehavior.AllowGet);
+                      new
+                      {
+                          success = false,
+                          message = "No se puede eliminar el super admin"
+                      }, JsonRequestBehavior.AllowGet);
             }
 
             try
@@ -157,7 +194,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.BaseAddress = new Uri(baseURL);
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
                 HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}api/Usuario/{ID}").Result;
@@ -170,12 +207,11 @@ namespace AmimirMVC_API.Controllers
                                 message = "Usuario eliminado satisfactoriamente"
                             }, JsonRequestBehavior.AllowGet);
                 }
-                else
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return RedirectToAction("Index", "Authentication");
-
                 }
-                throw new Exception("Error desconocido al borrar usuario");
+                throw new Exception("Error desconocido al borrar Usuario");
             }
             catch (Exception e)
             {

@@ -3,7 +3,6 @@
     ViewBag.Title = "Autenticarse";
 }
 
-<p>@ViewBag.Message</p>
 
 @if (ViewBag.IsLoggedIn == null || !ViewBag.IsLoggedIn)
 {
@@ -34,7 +33,7 @@
                             <hr class="mt-6 border-b-1 border-gray-400">
                         </div>
                         <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
-
+                            <p class="pb-2">@ViewBag.Message</p>
                             <form>
                                 <div class="relative w-full mb-3">
                                     <label class="block uppercase text-gray-700 text-xs font-bold mb-2" for="grid-password">Username</label>
@@ -53,20 +52,26 @@
                             </form>
                         </div>
                     </div>
-                    </div>
                 </div>
             </div>
-                    }
-                    }
-                    else
-                    {
-                    using (Html.BeginForm("Logout", "Authentication", FormMethod.Post))
-                    {
-                    @Html.AntiForgeryToken()
-                    <h3>Usuario</h3>
-                    <p>@ViewBag.Username</p>
-                    <input type="submit" value="Cerrar Sesión" class="bg-blue-500 hover:bg-blue-dark-500 text-white font-bold py-2 px-4 rounded" />
-                    }
+        </div>
+    }
+}
+else
+{
+    using (Html.BeginForm("Logout", "Authentication", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+<div class="w-1/2 mx-auto">
 
-                    }
+
+    <h1 class="font-sans font-bold break-normal text-indigo-500 py-8 text-xl md:text-2xl">
+        Has iniciado sesión
+    </h1>
+    <p class="text-xl pb-4"><span class="font-bold">Usuario actual: </span>@ViewBag.Username</p>
+    <input type="submit" value="Cerrar Sesión" class="bg-blue-500 hover:bg-blue-dark-500 text-white font-bold py-2 px-4 rounded" />
+</div>
+    }
+
+}
 

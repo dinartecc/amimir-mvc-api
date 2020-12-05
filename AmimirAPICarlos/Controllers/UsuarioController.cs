@@ -21,7 +21,7 @@ namespace AmimirAPICarlos.Controllers
         // GET: api/Usuario
         public IHttpActionResult GetUsuarios()
         {
-            if (!AdminValidator())
+             if (!AdminValidator())
             {
                 return Unauthorized();
             }
@@ -51,7 +51,7 @@ namespace AmimirAPICarlos.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutUsuario(int id, Usuario usuario)
         {
-            if (!AdminValidator() || !isOwnUsername(id))
+            if (!AdminValidator())
             {
                 return Unauthorized();
             }
@@ -66,7 +66,17 @@ namespace AmimirAPICarlos.Controllers
                 return BadRequest();
             }
 
-            usuario.Contrasena = sha256(usuario.Contrasena);
+           
+
+            if (usuario.Contrasena == null || usuario.Contrasena.Length == 0 )
+            {
+                var original = db.Usuario.AsNoTracking().Where(x=> x.ID == usuario.ID).FirstOrDefault();
+                usuario.Contrasena = original.Contrasena;
+            }
+            else
+            {
+                usuario.Contrasena = sha256(usuario.Contrasena);
+            }
 
             db.Entry(usuario).State = EntityState.Modified;
 
@@ -138,6 +148,7 @@ namespace AmimirAPICarlos.Controllers
         }
 
         [HttpPost]
+        [Route("api/ResetUser")]
         public IHttpActionResult Reset(int id)
         {
             if(!AdminValidator())

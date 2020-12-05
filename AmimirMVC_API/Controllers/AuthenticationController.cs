@@ -81,9 +81,25 @@ namespace AmimirMVC_API.Controllers
         public ActionResult Logout()
         {
             ViewBag.IsLoggedIn = false;
-            HttpContext.Session.Remove("token");
-            ViewBag.Message = "Has cerrado la sesión";
 
+            Token token = HttpContext.Session["token"] as Token;
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(baseURL);
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            client.DefaultRequestHeaders.Accept.Add(contentType);
+
+            var req = new RefRequestCLS();
+            req.RefreshToken = token.RefreshToken;
+            req.ClientSecret = ConfigurationManager.AppSettings["CLIENT_SECRET"];
+
+            string stringData = JsonConvert.SerializeObject(req);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+
+            client.PostAsync(basePath + "api/DeleteToken", contentData);
+
+            ViewBag.Message = "Has cerrado la sesión";
+            HttpContext.Session.Abandon();
             return View("Index");
         }
     }

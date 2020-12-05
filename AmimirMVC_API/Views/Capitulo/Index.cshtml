@@ -24,43 +24,54 @@
                 <h3>ID</h3>
                 <input id="id" name="id" class="border w-1/4" readonly type="text" />
             </div>
-            <div class="md:flex md:space-x-10">
-                <div>
-                    <h3>Anime</h3>
-                    <div id="anime-container" class="border rounded">
-                        <select class="multiselect" style="width:100%" id="anime" name="anime">
-                            @if (ViewBag.Animes != null)
-                            {
-                                foreach (var anime in ViewBag.Animes)
-                                {
-                                    <option value="@anime.ID">@anime.Nombre</option>
-                                }
+            <div class="md:flex flex-col">
 
-                            }
-                        </select>
-                    </div>
-                </div>
+            </div>
+            <div class="md:flex md:space-x-10">
                 <div class="w-full md:w-1/2">
-                    <h3>Duracion</h3>
-                    <input id="duracion" name="duracion" class="border rounded w-full" type="text" />
-                </div>
-                <div class="w-full md:w-1/2">
-                    <h3>Titulo</h3>
+                    <h3>Título</h3>
                     <input id="titulo" name="titulo" class="border rounded w-full" type="text" />
                 </div>
                 <div class="w-full md:w-1/2">
-                    <h3>Sinopsis</h3>
-                    <input id="sinopsis" name="sinopsis" class="border rounded w-full" type="text" />
-                </div>
-                <div class="w-full md:w-1/2">
                     <h3>Fecha publicado</h3>
-                    <input id="fpublic" name="fpublic" class="border rounded w-full"  data-toggle="datepicker" />
+                    <input id="fecha-publicado" name="fecha-publicado" class="border rounded w-full" data-toggle="datepicker" />
+                </div>
+            </div>
+
+            <div>
+                <h3>Anime</h3>
+                <div id="anime-container" class="border rounded">
+                    <select class="multiselect" style="width:100%" id="anime" name="anime">
+                        @if (ViewBag.Animes != null)
+                        {
+                            foreach (var anime in ViewBag.Animes)
+                            {
+                                <option value="@anime.ID">@anime.Nombre</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="md:flex md:space-x-10">
+                <div class="w-full md:w-1/2">
+                    <h3>Duración (segundos)</h3>
+                    <input id="duracion" name="duracion" class="border rounded w-full" type="text" />
                 </div>
                 <div class="w-full md:w-1/2">
                     <h3>URL</h3>
                     <input id="url" name="url" class="border rounded w-full" type="text" />
                 </div>
             </div>
+
+            <div class="w-full">
+                <h3>Sinópsis</h3>
+                <textarea id="sinopsis" name="sinopsis" class="border rounded w-full"></textarea>
+            </div>
+
+
+
 
         </form>
     </div>
@@ -73,11 +84,11 @@
         <div class="flex items-center justify-between">
 
             <h1 class="font-sans font-bold break-normal text-indigo-500 px-2 py-8 text-xl md:text-2xl">
-                Informacion de Capitulos
+                Datos de Capítulos
             </h1>
             @if (ViewBag.isAdmin)
             {
-                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar Nuevo</button>
+                <button id="modal-new" class="bg-indigo-500 p-2 rounded text-white">Registrar nuevo capítulo</button>
             }
 
         </div>
@@ -134,15 +145,27 @@
                     "sortDescending": ": activate to sort column descending"
                 }
             },
+            "columnDefs": [
+                {
+                    "targets": [2],
+                    "render": function (data) {
+                        return `${data} seg.`
+                    }
+                },
+                {
+                    "targets": [4],
+                    "render": function (data) {
+                        var x = moment(data)
+                        return x.isValid() ? moment(data).format('D/M/YYYY') : '---'
+                    }
+                }
+            ],
             "columns": [
                 { name: "id", title: "ID", data: 'ID' },
+                { name: "titulo", title: "Título", data: 'Titulo' },
+                { name: "duracion", title: "Duración", data: 'Duracion' },
                 { name: "anime", title: "Anime", data: 'Anime.Nombre' },
-                { name: "titulo", title: "Titulo", data: 'Titulo' },
-                { name: "duracion", title: "Duracion", data: 'Duracion' },
-                { name: "sinopsis", title: "Sinopsis", data: 'Sinopsis' },
                 { name: "fecha_publicado", title: "Fecha Publicado", defaultContent: '---', data: 'FechaPublicado' },
-                { name: "sinopsis", title: "Sinopsis", data: 'Sinopsis' },
-
             ],
             responsive: true,
         })
@@ -159,6 +182,8 @@
             var error = false,
                 id = $("#id").val(),
                 anime = $("#anime").select2("data")
+                fechaPublicado = moment($("#fecha-publicado").val(), 'DD/MM/YYYY', true),
+                    fechaString = $("#fecha-publicado").val(),
                 titulo = $("#titulo").val(),
                 duracion = $("#duracion").val(),
                 sinopsis = $("#sinopsis").val(),
@@ -166,13 +191,60 @@
 
 
             $("#modal .border-red-500").removeClass("border-red-500")
-
             $("#modal-errors").empty()
 
             if (!titulo) {
                 error = true
-                $("#modal-errors").append("<li>Titulo no puede ser vacío</li>")
+                $("#modal-errors").append("<li>Título no puede ser vacío</li>")
                 $("#titulo").addClass("border-red-500")
+            }
+
+            if (fechaString === '') {
+                error = true
+                $("#modal-errors").append("<li>Fecha publicado no puede ser vacío</li>")
+                $("#fecha-publicado").addClass("border-red-500")
+            }
+
+            if (fechaString !== '' && !fechaPublicado.isValid()) {
+                error = true
+                $("#modal-errors").append("<li>Ingrese una fecha válida</li>")
+                $("#fecha-publicado").addClass("border-red-500")
+            }
+
+            if (!sinopsis) {
+                error = true
+                $("#modal-errors").append("<li>Sinópsis no puede ser vacío</li>")
+                $("#sinopsis").addClass("border-red-500")
+            }
+
+            if (anime.length === 0) {
+                error = true
+                $("#modal-errors").append("<li>Anime no puede ser vacío</li>")
+                $("#anime-container").addClass("border-red-500")
+            }
+
+            if (!url) {
+                error = true
+                $("#modal-errors").append("<li>URL no puede ser vacío</li>")
+                $("#url").addClass("border-red-500")
+            }
+
+            if (!(/https?:\/\/(www\.)?[-a-zA-Z0-9@@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@@:%_\+.~#?&//=]*)/.test(url))) {
+                error = true
+                $("#modal-errors").append("<li>URL debe de ser válido</li>")
+                $("#url").addClass("border-red-500")
+            }
+
+            if (!duracion) {
+                error = true
+                $("#modal-errors").append("<li>Duración no puede ser vacío</li>")
+                $("#duracion").addClass("border-red-500")
+            }
+
+            if (isNaN(duracion) || duracion < 0 || /\./.test(duracion)) {
+                error = true
+                $("#modal-errors").append("<li>Duración debe de ser un entero válido</li>")
+                $("#duracion").addClass("border-red-500")
             }
 
             /*XD*/
@@ -186,10 +258,11 @@
                         Titulo: titulo,
                         Duracion: duracion,
                         Sinopsis: sinopsis,
-                        URL: url
+                        URL: url,
+                        FechaPublicado: fechaPublicado.toISOString()
                     },
                     UrlAlternativo: []
-  
+
                 }
                 console.log(req);
                 $.ajax({
@@ -311,25 +384,28 @@
             $("#modal-title").html("Editar registro")
             var data = table.row(this).data();
 
-            console.log(data)
+            console.log(data.URL)
 
             $("#modal .border-red-500").removeClass("border-red-500")
 
             $("#modal-errors").empty()
 
-            $('#id').val(data.Anime.ID)
-            $('#anime').val(data.Anime.AnimeID).trigger('change')
-            $('#titulo').val(data.Anime.titulo)
-            $('#duracion').val(data.Anime.duracion)
-            $('#sinopsis').val(data.Anime.Sinopsis)
-            $('#fecha-publicado').val(data.Anime.FechaPublicado)
+            $('#id').val(data.ID)
+            $('#anime').val(data.Anime.ID).trigger('change')
+            $('#titulo').val(data.Titulo)
+            $('#duracion').val(data.Duracion)
+            $('#sinopsis').val(data.Sinopsis)
+            $('#fecha-publicado').val(data.FechaPublicado)
+            $('#url').val(data.URL)
+
+
             if (data.FechaPublicado) {
                 $('[data-toggle="datepicker"]').datepicker('setDate', new Date(data.FechaPublicado))
             }
             else {
                 $('#fecha-publicado').val('')
             }
-            $('#url').val(data.Anime.URL)
+
             $("#modal-delete").removeClass('hidden')
 
 

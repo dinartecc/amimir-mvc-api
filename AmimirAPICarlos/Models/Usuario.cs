@@ -9,6 +9,7 @@
 
 namespace AmimirAPICarlos.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
@@ -21,5 +22,10 @@ namespace AmimirAPICarlos.Models
         public string CorreoElectronico { get; set; }
         public string Contrasena { get; set; }
         public bool isAdmin { get; set; }
+
+        public bool ShouldSerializeContrasena()
+        {
+            return false;
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace AmimirMVC_API.Models
         public string Username { get; set; }
         public string CorreoElectronico { get; set; }
         public string Contrasena { get; set; }
+        public bool isAdmin { get; set; }
     }
 }

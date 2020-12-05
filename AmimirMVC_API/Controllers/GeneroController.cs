@@ -24,9 +24,29 @@ namespace AmimirMVC_API.Controllers
         public ActionResult Index()
         {
             Token token = HttpContext.Session["token"] as Token;
-            if (token == null || token.ExpiresAt < DateTime.Now)
+            if (token == null)
             {
                 return RedirectToAction("Index", "Authentication");
+            }
+
+
+            if (token.ExpiresAt < DateTime.Now)
+            {
+                var newToken = RefrescarToken(token);
+                if (newToken.AccessToken == token.AccessToken)
+                {
+                    HttpContext.Session.Abandon();
+                    return RedirectToAction("Index", "Authentication");
+                }
+                else
+                {
+                    HttpContext.Session["token"] = newToken;
+                }
+
+            }
+            else if (token.ExpiresAt.AddMinutes(-10) < DateTime.Now)
+            {
+                HttpContext.Session["token"] = RefrescarToken(token);
             }
             ViewBag.IsAdmin = token.isAdmin;
 

@@ -30,7 +30,7 @@
                     <input id="nombre" name="nombre" class="border rounded w-full" type="text" />
                 </div>
                 <div class="w-full md:w-1/2">
-                    <h3>Duracion en días</h3>
+                    <h3>Duración (en días)</h3>
                     <input id="duracion" name="duracion" class="border rounded w-full" type="text" />
                 </div>
                 <div class="w-full md:w-1/2">
@@ -128,7 +128,7 @@
             "columns": [
                 { name: "id", title: "ID", data: 'ID' },
                 { name: "nombre", title: "Nombre", data: 'Nombre' },
-                { name: "duracion", title: "Duracion", data: 'Duracion' },
+                { name: "duracion", title: "Duración", data: 'Duracion' },
                 { name: "precio", title: "Precio", data: 'Precio' }
             ],
             responsive: true,
@@ -161,7 +161,7 @@
             }
             if (!duracion) {
                 error = true
-                $("#modal-errors").append("<li>Duracion no puede ser vacío</li>")
+                $("#modal-errors").append("<li>Duración no puede ser vacío</li>")
                 $("#duracion").addClass("border-red-500")
             }
             if (!precio) {

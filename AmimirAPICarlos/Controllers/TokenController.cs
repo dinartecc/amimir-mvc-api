@@ -93,7 +93,9 @@ namespace AmimirAPICarlos.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var fullToken = db.RefreshToken.Where(x => x.RefreshToken == req.RefreshToken && x.ClientSecret == sha256(req.ClientSecret)).FirstOrDefault();
+            var secret = sha256(req.ClientSecret);
+
+            var fullToken = db.RefreshToken.Where(x => x.RefreshToken == req.RefreshToken && x.ClientSecret == secret).FirstOrDefault();
 
             
             db.RefreshToken.Remove(fullToken);
