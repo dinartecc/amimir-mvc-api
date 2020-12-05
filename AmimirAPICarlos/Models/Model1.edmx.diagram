@@ -28,6 +28,7 @@
         <AssociationConnector Association="AmimirModel.FK__AnimeEstu__Estud__48CFD27E" />
         <AssociationConnector Association="AmimirModel.FK__AnimeGene__Gener__4F7CD00D" />
         <AssociationConnector Association="AmimirModel.FK__UrlAltern__Capit__5535A963" />
+        <EntityTypeShape EntityType="AmimirModel.RefreshTokenCLS" Width="1.5" PointX="8.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

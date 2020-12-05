@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -44,7 +45,13 @@ namespace AmimirMVC_API.Controllers
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             client.DefaultRequestHeaders.Accept.Add(contentType);
 
-            string stringData = JsonConvert.SerializeObject(user);
+            var request = new AuthReqCLS();
+
+            request.user = user;
+            request.ClientID = ConfigurationManager.AppSettings["CLIENT_ID"];
+            request.ClientSecret = ConfigurationManager.AppSettings["CLIENT_SECRET"];
+
+            string stringData = JsonConvert.SerializeObject(request);
             var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = client.PostAsync(basePath + "api/Token", contentData).Result;

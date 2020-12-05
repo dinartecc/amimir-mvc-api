@@ -9,11 +9,9 @@
 
 namespace AmimirAPICarlos.Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Actor
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,12 +19,11 @@ namespace AmimirAPICarlos.Models
         {
             this.Personajes = new HashSet<Personajes>();
         }
-
+    
         public int ID { get; set; }
         public string Nombre { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        [JsonIgnore]
         public virtual ICollection<Personajes> Personajes { get; set; }
     }
 }

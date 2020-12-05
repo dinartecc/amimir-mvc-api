@@ -94,6 +94,7 @@
       <End Role="Capitulo" EntitySet="Capitulo" />
       <End Role="UrlAlternativo" EntitySet="UrlAlternativo" />
     </AssociationSet>
+    <EntitySet Name="RefreshToken" EntityType="AmimirModel.RefreshTokenCLS" />
   </EntityContainer>
   <EntityType Name="Actor">
     <Key>
@@ -314,4 +315,13 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="RefreshTokenCLS">
+    <Key>
+      <PropertyRef Name="ClientID" />
+    </Key>
+    <Property Name="RefreshToken" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+    <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ClientID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ClientSecret" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

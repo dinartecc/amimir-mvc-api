@@ -133,5 +133,15 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="RefreshToken">
+      <EntityTypeMapping TypeName="AmimirModel.RefreshTokenCLS">
+        <MappingFragment StoreEntitySet="RefreshToken">
+          <ScalarProperty Name="ClientSecret" ColumnName="ClientSecret" />
+          <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+          <ScalarProperty Name="ExpiresAt" ColumnName="ExpiresAt" />
+          <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

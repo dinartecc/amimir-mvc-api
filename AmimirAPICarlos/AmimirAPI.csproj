@@ -205,6 +205,7 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AnimeWrapper.cs" />
+    <Compile Include="Models\AuthRequestCLS.cs" />
     <Compile Include="Models\Capitulo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -240,6 +241,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Personajes.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RefreshTokenCLS.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Token.cs" />

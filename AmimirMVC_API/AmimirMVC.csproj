@@ -135,6 +135,7 @@
     <Compile Include="Models\ActorCLS.cs" />
     <Compile Include="Models\AnimeCLS.cs" />
     <Compile Include="Models\AnimeWrapper.cs" />
+    <Compile Include="Models\AuthReqCLS.cs" />
     <Compile Include="Models\CapituloCLS.cs" />
     <Compile Include="Models\CapituloWrapper.cs" />
     <Compile Include="Models\EstadoCLS.cs" />

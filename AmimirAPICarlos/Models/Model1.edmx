@@ -103,6 +103,15 @@
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Rol" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="RefreshToken">
+          <Key>
+            <PropertyRef Name="ClientID" />
+          </Key>
+          <Property Name="RefreshToken" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="ExpiresAt" Type="datetime" Nullable="false" />
+          <Property Name="ClientID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ClientSecret" Type="varchar" MaxLength="256" Nullable="false" />
+        </EntityType>
         <EntityType Name="UrlAlternativo">
           <Key>
             <PropertyRef Name="ID" />
@@ -256,6 +265,7 @@
           <EntitySet Name="NombreAlternativo" EntityType="Self.NombreAlternativo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Paquete" EntityType="Self.Paquete" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Personajes" EntityType="Self.Personajes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RefreshToken" EntityType="Self.RefreshToken" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UrlAlternativo" EntityType="Self.UrlAlternativo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Anime__EstadoID__3B75D760" Association="Self.FK__Anime__EstadoID__3B75D760">
@@ -397,6 +407,7 @@
             <End Role="Capitulo" EntitySet="Capitulo" />
             <End Role="UrlAlternativo" EntitySet="UrlAlternativo" />
           </AssociationSet>
+          <EntitySet Name="RefreshToken" EntityType="AmimirModel.RefreshTokenCLS" />
         </EntityContainer>
         <EntityType Name="Actor">
           <Key>
@@ -617,6 +628,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="RefreshTokenCLS">
+          <Key>
+            <PropertyRef Name="ClientID" />
+          </Key>
+          <Property Name="RefreshToken" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClientID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ClientSecret" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -752,6 +772,16 @@
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="CapituloID" ColumnName="CapituloID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RefreshToken">
+            <EntityTypeMapping TypeName="AmimirModel.RefreshTokenCLS">
+              <MappingFragment StoreEntitySet="RefreshToken">
+                <ScalarProperty Name="ClientSecret" ColumnName="ClientSecret" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="ExpiresAt" ColumnName="ExpiresAt" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

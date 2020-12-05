@@ -38,5 +38,6 @@ namespace AmimirAPICarlos.Models
         public virtual DbSet<NombreAlternativo> NombreAlternativo { get; set; }
         public virtual DbSet<Personajes> Personajes { get; set; }
         public virtual DbSet<UrlAlternativo> UrlAlternativo { get; set; }
+        public virtual DbSet<RefreshTokenCLS> RefreshToken { get; set; }
     }
 }
