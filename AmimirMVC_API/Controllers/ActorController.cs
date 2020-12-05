@@ -16,6 +16,7 @@ namespace AmimirMVC_API.Controllers
     public class ActorController : Controller 
     {
         private string baseURL = "https://localhost:44300";
+        private string basePath = "/";
         HttpClient httpClient = new HttpClient();
 
 
@@ -46,7 +47,7 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            HttpResponseMessage response = httpClient.GetAsync("/api/Actores").Result;
+            HttpResponseMessage response = httpClient.GetAsync( basePath + "api/Actores").Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -100,7 +101,7 @@ namespace AmimirMVC_API.Controllers
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync("/api/Actores", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(basePath + "api/Actores", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -117,7 +118,7 @@ namespace AmimirMVC_API.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = httpClient.PutAsync($"/api/Actores/{ID}", body).Result;
+                    HttpResponseMessage response = httpClient.PutAsync($"{basePath}api/Actores/{ID}", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -160,7 +161,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
-                HttpResponseMessage response = httpClient.DeleteAsync($"/api/Actores/{ID}").Result;
+                HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}/api/Actores/{ID}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(
@@ -180,7 +181,7 @@ namespace AmimirMVC_API.Controllers
                        new
                        {
                            success = false,
-                           message = "Esta crazy este actor"
+                           message = "Este actor tiene animes asociados"
                        }, JsonRequestBehavior.AllowGet);
                 }
                 throw new Exception("Error desconocido al borrar el actor");

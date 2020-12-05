@@ -98,6 +98,15 @@
     <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="Rol" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="RefreshToken">
+    <Key>
+      <PropertyRef Name="ClientID" />
+    </Key>
+    <Property Name="RefreshToken" Type="varchar" MaxLength="256" Nullable="false" />
+    <Property Name="ExpiresAt" Type="datetime" Nullable="false" />
+    <Property Name="ClientID" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ClientSecret" Type="varchar" MaxLength="256" Nullable="false" />
+  </EntityType>
   <EntityType Name="UrlAlternativo">
     <Key>
       <PropertyRef Name="ID" />
@@ -251,6 +260,7 @@
     <EntitySet Name="NombreAlternativo" EntityType="Self.NombreAlternativo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Paquete" EntityType="Self.Paquete" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Personajes" EntityType="Self.Personajes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RefreshToken" EntityType="Self.RefreshToken" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UrlAlternativo" EntityType="Self.UrlAlternativo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK__Anime__EstadoID__3B75D760" Association="Self.FK__Anime__EstadoID__3B75D760">

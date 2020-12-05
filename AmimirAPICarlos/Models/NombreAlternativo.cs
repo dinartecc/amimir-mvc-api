@@ -9,14 +9,12 @@
 
 namespace AmimirAPICarlos.Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     
     public partial class NombreAlternativo
     {
         public int ID { get; set; }
-        [JsonIgnore]
         public int AnimeID { get; set; }
         public string Nombre { get; set; }
     

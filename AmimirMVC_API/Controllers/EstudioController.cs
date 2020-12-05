@@ -16,6 +16,7 @@ namespace AmimirMVC_API.Controllers
     public class EstudioController : Controller
     {
         private string baseURL = "https://localhost:44300";
+        private string basePath = "/";
         HttpClient httpClient = new HttpClient();
 
 
@@ -46,7 +47,7 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            HttpResponseMessage response = httpClient.GetAsync("/api/Estudios").Result;
+            HttpResponseMessage response = httpClient.GetAsync(basePath + "api/Estudios").Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -100,7 +101,7 @@ namespace AmimirMVC_API.Controllers
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync("/api/Estudios", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(basePath + "api/Estudios", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -117,7 +118,7 @@ namespace AmimirMVC_API.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = httpClient.PutAsync($"/api/Estudios/{ID}", body).Result;
+                    HttpResponseMessage response = httpClient.PutAsync($"{basePath}api/Estudios/{ID}", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -160,7 +161,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
-                HttpResponseMessage response = httpClient.DeleteAsync($"/api/Estudios/{ID}").Result;
+                HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}api/Estudios/{ID}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(

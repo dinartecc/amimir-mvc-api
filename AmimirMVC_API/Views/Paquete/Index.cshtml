@@ -30,11 +30,11 @@
                     <input id="nombre" name="nombre" class="border rounded w-full" type="text" />
                 </div>
                 <div class="w-full md:w-1/2">
-                    <h3>Duracion</h3>
+                    <h3>Duracion en días</h3>
                     <input id="duracion" name="duracion" class="border rounded w-full" type="text" />
                 </div>
                 <div class="w-full md:w-1/2">
-                    <h3>Precio</h3>
+                    <h3>Precio (en $)</h3>
                     <input id="precio" name="precio" class="border rounded w-full" type="text" />
                 </div>
             </div>
@@ -115,8 +115,13 @@
                 {
                     "targets": [2],
                     "render": function (data) {
-                        var x = moment(data)
-                        return x.isValid() ? moment(data).format('D/M/YYYY') : '---'
+                        return (data) + ' días'
+                    }
+                },
+                {
+                    "targets": [3],
+                    "render": function (data) {
+                        return "$ " + (data)
                     }
                 }
             ],

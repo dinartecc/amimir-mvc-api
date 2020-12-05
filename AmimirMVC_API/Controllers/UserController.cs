@@ -16,6 +16,7 @@ namespace AmimirMVC_API.Controllers
     public class UserController : Controller
     {
         private string baseURL = "https://localhost:44300";
+        private string basePath = "/";
 
         private bool UsuarioAutenticado()
         {
@@ -42,7 +43,7 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
 
-            HttpResponseMessage response = httpClient.GetAsync("/api/Usuario").Result;
+            HttpResponseMessage response = httpClient.GetAsync(basePath + "api/Usuario").Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -94,7 +95,7 @@ namespace AmimirMVC_API.Controllers
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync("/api/Usuario", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(basePath +"api/Usuario", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -110,7 +111,7 @@ namespace AmimirMVC_API.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = httpClient.PutAsync($"/api/Usuario/{ID}", body).Result;
+                    HttpResponseMessage response = httpClient.PutAsync($"{basePath}api/Usuario/{ID}", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -159,7 +160,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session["token"].ToString());
 
 
-                HttpResponseMessage response = httpClient.DeleteAsync($"/api/Usuario/{ID}").Result;
+                HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}api/Usuario/{ID}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(

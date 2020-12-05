@@ -71,10 +71,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/18/2020 19:31:51</publishTime>
     </File>
     <File Include="bin/AmimirAPICarlos.dll">
-      <publishTime>11/03/2020 00:02:41</publishTime>
+      <publishTime>12/04/2020 20:53:18</publishTime>
     </File>
     <File Include="bin/AmimirAPICarlos.pdb">
-      <publishTime>11/03/2020 00:02:41</publishTime>
+      <publishTime>12/04/2020 20:53:18</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/10/2013 16:29:20</publishTime>
@@ -90,6 +90,15 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>09/05/2018 16:10:50</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.JsonWebTokens.dll">
+      <publishTime>10/13/2020 00:21:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Logging.dll">
+      <publishTime>10/13/2020 00:23:34</publishTime>
+    </File>
+    <File Include="bin/Microsoft.IdentityModel.Tokens.dll">
+      <publishTime>10/13/2020 00:28:08</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>07/25/2012 11:48:56</publishTime>
@@ -244,6 +253,15 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="bin/roslyn/VBCSCompiler.exe.config">
       <publishTime>08/08/2018 12:18:16</publishTime>
     </File>
+    <File Include="bin/System.IdentityModel.Tokens.Jwt.dll">
+      <publishTime>10/13/2020 00:20:12</publishTime>
+    </File>
+    <File Include="bin/System.Linq.Dynamic.Core.dll">
+      <publishTime>10/24/2020 18:18:14</publishTime>
+    </File>
+    <File Include="bin/System.Linq.Dynamic.Core.pdb">
+      <publishTime>10/24/2020 18:18:14</publishTime>
+    </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>11/28/2018 13:00:36</publishTime>
     </File>
@@ -329,7 +347,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/19/2020 00:45:51</publishTime>
     </File>
     <File Include="Models/Model1.edmx.diagram">
-      <publishTime>11/02/2020 19:53:46</publishTime>
+      <publishTime>11/24/2020 19:17:59</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>10/18/2020 19:31:54</publishTime>
@@ -374,7 +392,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/18/2020 19:31:51</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>11/03/2020 00:02:42</publishTime>
+      <publishTime>12/04/2020 20:53:18</publishTime>
     </File>
   </ItemGroup>
 </Project>

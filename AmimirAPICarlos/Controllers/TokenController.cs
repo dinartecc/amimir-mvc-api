@@ -19,12 +19,14 @@ namespace AmimirAPICarlos.Controllers
     {
         private AmimirEntities1 db = new AmimirEntities1();
         [HttpPost]
-        public IHttpActionResult Authenticate(User user)
+        public IHttpActionResult Authenticate(AuthRequestCLS req)
         {
-            if (user == null)
+            if (req == null || req.user == null || req.ClientID == null )
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
+            var user = req.user;
 
             var encrypted = sha256(user.Contrasena);
 
@@ -32,7 +34,7 @@ namespace AmimirAPICarlos.Controllers
 
             if (usuario != null)
             {
-                var token = GenerateJWT(usuario);
+                var token = GenerateJWT(usuario, req.ClientID, req.ClientSecret);
 
                 return Ok(token);
             }
@@ -44,7 +46,7 @@ namespace AmimirAPICarlos.Controllers
 
 
 
-        private Token GenerateJWT(Usuario user)
+        private Token GenerateJWT(Usuario user, string ClientID, string ClientSecret)
         {
             var now = DateTime.Now;
 
@@ -53,7 +55,23 @@ namespace AmimirAPICarlos.Controllers
             var audienceToken = ConfigurationManager.AppSettings["JWT_AUDIENCE_TOKEN"];
             var issuerToken = ConfigurationManager.AppSettings["JWT_ISSUER_TOKEN"];
             var expireTime = ConfigurationManager.AppSettings["JWT_EXPIRE_MINUTES"];
+            var rtExpireTime = ConfigurationManager.AppSettings["RT_EXPIRE_DAYS"];
 
+            var oldRefresh = db.RefreshToken.Find(ClientID);
+
+            if (oldRefresh != null)
+            {
+                try
+                {
+                    db.RefreshToken.Remove(oldRefresh);
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    Console.WriteLine("Error al borrar refresh token");
+                }
+                
+            }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -76,10 +94,29 @@ namespace AmimirAPICarlos.Controllers
 
             var jwtTokenSerialized = tokenHandler.WriteToken(jwtSecurityToken);
 
+            var refreshToken = sha256($"{jwtTokenSerialized}{now}{secretKey}");
+
+            RefreshTokenCLS refreshTokenCLS = new RefreshTokenCLS();
+            refreshTokenCLS.RefreshToken = refreshToken;
+            refreshTokenCLS.ClientID = ClientID;
+            refreshTokenCLS.ClientSecret = ClientSecret;
+            refreshTokenCLS.ExpiresAt = now.AddDays(Convert.ToInt32(rtExpireTime));
+
+            db.RefreshToken.Add(refreshTokenCLS);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                Console.WriteLine("Error al guardar refresh token");
+            }
+
             Token token = new Token();
             token.AccessToken = jwtTokenSerialized;
             token.ExpiresAt =  now.AddMinutes(Convert.ToInt32(expireTime));
             token.isAdmin = user.isAdmin;
+            token.RefreshToken = refreshToken;
 
             return token;
         }
