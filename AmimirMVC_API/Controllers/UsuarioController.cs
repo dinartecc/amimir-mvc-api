@@ -50,6 +50,7 @@ namespace AmimirMVC_API.Controllers
             }
 
             ViewBag.IsAdmin = token.isAdmin;
+            ViewBag.UserID = token.UserID;
 
             return View();
         }

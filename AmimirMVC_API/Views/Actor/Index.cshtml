@@ -134,7 +134,7 @@
                 $("#modal-errors").append("<li>Nombre no puede ser vacío</li>")
                 $("#nombre").addClass("border-red-500")
             }
-           
+
 
             if (!error) {
                 const req = {
@@ -142,7 +142,7 @@
                         ID: id,
                         Nombre: nombre
                     }
-                  
+
                 }
                 $.ajax({
                     url: "/Actor/Guardar",
@@ -175,7 +175,7 @@
                             closeButtonText: 'Cerrar'
                         })
                     }
-                   
+
                 }).fail(function (response) {
                     Swal.fire({
                         title: 'Ha ocurrido un error!',
@@ -257,7 +257,6 @@
             $("#modal-title").html("Editar registro")
             var data = table.row(this).data();
 
-            console.log(data)
 
             $("#modal .border-red-500").removeClass("border-red-500")
 
@@ -266,10 +265,10 @@
             $('#id').val(data.ID)
             $('#id-container').removeClass('hidden')
             $('#nombre').val(data.Nombre)
-          
+
             $("#modal-delete").removeClass('hidden')
 
-           
+
             $("#modal").removeClass('hidden')
         })
 
@@ -287,6 +286,10 @@
                 table.draw().columns.adjust()
                     .responsive.recalc();
             })
+        }
+        
+        if (!@Json.Encode(ViewBag.isAdmin)) {
+            $('#modal input').prop('readonly', true)
         }
 
         updateRows()

@@ -487,6 +487,10 @@
 
         updateRows()
 
+        if (!@Json.Encode(ViewBag.isAdmin)) {
+            $('#modal input').prop('readonly', true)
+        }
+
         //multi select
         $('.multiselect').select2();
         $('#actores').on('select2:select', function (e) {

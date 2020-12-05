@@ -343,13 +343,18 @@
             $("#modal-title").html("Editar registro")
             var data = table.row(this).data();
 
+            if (data.ID == 1 && @ViewBag.UserID != 1) {
+                $("#modal-form input").prop('readonly', true)
+                $("#modal-save").addClass('hidden')
+            }
+            else {
+                $("#modal-form input").prop('readonly', false)
+                $("#modal-save").removeClass('hidden')
+            }
 
             $("#modal .border-red-500").removeClass("border-red-500")
-
             $("#modal-errors").empty()
-
             $("#hide-contrasena").removeClass('hidden')
-
             $('#id').val(data.ID)
             $('#id-container').removeClass('hidden')
             $('#nombre').val(data.Nombre)
@@ -374,7 +379,7 @@
                 $('#fecha-estreno').val('')
             }
 
-            
+
             $("#modal").removeClass('hidden')
         })
 
@@ -392,6 +397,10 @@
                 table.draw().columns.adjust()
                     .responsive.recalc();
             })
+        }
+
+        if (!@Json.Encode(ViewBag.isAdmin)) {
+            $('#modal input').prop('readonly', true)
         }
 
         updateRows()

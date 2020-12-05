@@ -13,5 +13,6 @@ namespace AmimirMVC_API.Models
         public DateTime ExpiresAt { get; set; }
         public bool isAdmin { get; set; }
         public string Username { get; set; }
+        public int UserID { get; set; }
     }
 }

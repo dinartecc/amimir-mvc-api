@@ -222,7 +222,7 @@
                         closeButtonText: 'Cerrar'
                     })
                 }
-                
+
             }).fail(function (response) {
                 Swal.fire({
                     title: 'Ha ocurrido un error!',
@@ -263,7 +263,7 @@
             $('#id').val(data.ID)
             $('#id-container').removeClass('hidden')
             $('#nombre').val(data.Nombre)
-           
+
             $('#imagen').val(data.Imagen)
             $("#modal-delete").removeClass('hidden')
             $("#modal").removeClass('hidden')
@@ -285,7 +285,11 @@
             })
         }
 
-        updateRows()       
+        if (!@Json.Encode(ViewBag.isAdmin)) {
+            $('#modal input').prop('readonly', true)
+        }
+
+        updateRows()
 
     });
 </script>

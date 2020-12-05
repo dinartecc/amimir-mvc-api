@@ -37,6 +37,8 @@ namespace AmimirAPICarlos.Controllers
             {
                 var token = GenerateJWT(usuario, req.ClientSecret);
 
+                token.UserID = usuario.ID;
+
                 return Ok(token);
             }
             else
@@ -98,9 +100,10 @@ namespace AmimirAPICarlos.Controllers
             var fullToken = db.RefreshToken.Where(x => x.RefreshToken == req.RefreshToken && x.ClientSecret == secret).FirstOrDefault();
 
             
-            db.RefreshToken.Remove(fullToken);
+            
             try
             {
+                db.RefreshToken.Remove(fullToken);
                 db.SaveChanges();
             }
             catch

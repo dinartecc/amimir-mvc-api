@@ -11,5 +11,6 @@ namespace AmimirAPICarlos.Models
         public DateTime ExpiresAt { get; set; }
         public bool isAdmin { get; set; }
         public string RefreshToken { get; set; }
+        public int UserID { get; set; }
     }
 }

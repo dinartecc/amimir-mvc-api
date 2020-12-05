@@ -308,6 +308,10 @@
             })
         }
 
+        if (!@Json.Encode(ViewBag.isAdmin)) {
+            $('#modal input').prop('readonly', true)
+        }
+
         updateRows()
 
 
