@@ -7,7 +7,7 @@ namespace AmimirMVC_API.Models
 {
     public class CapituloCLS
     {
-        public int ID { get; set; }
+        public Nullable<int> ID { get; set; }
         public int AnimeID { get; set; }
         public string Titulo { get; set; }
         public int Duracion { get; set; }

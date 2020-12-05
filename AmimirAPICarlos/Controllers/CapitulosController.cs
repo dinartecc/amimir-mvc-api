@@ -50,18 +50,22 @@ namespace AmimirAPICarlos.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+           
             var capitulo = Req.Capitulo;
             capitulo.ID = id;
+            capitulo.FechaPublicado = DateTime.Now;
             var URLAlternativos = Req.urlAlternativos;
 
             db.UrlAlternativo.RemoveRange(db.UrlAlternativo.Where(x => x.CapituloID == id));
-
-            foreach ( UrlAlternativo urlAlternativo in URLAlternativos )
+            if(URLAlternativos != null)
             {
-                urlAlternativo.CapituloID = id;
-                db.UrlAlternativo.Add(urlAlternativo);
+                foreach (UrlAlternativo urlAlternativo in URLAlternativos)
+                {
+                    urlAlternativo.CapituloID = id;
+                    db.UrlAlternativo.Add(urlAlternativo);
+                }
             }
+
 
             db.Entry(capitulo).State = EntityState.Modified;
 
@@ -106,12 +110,15 @@ namespace AmimirAPICarlos.Controllers
 
                 db.Capitulo.Add(capitulo);
                 db.SaveChanges();
-
-                foreach(UrlAlternativo urlAlternativo in URLAlternativos)
+                if (URLAlternativos != null)
                 {
-                    urlAlternativo.CapituloID = capitulo.ID;
-                    db.UrlAlternativo.Add(urlAlternativo);
+                    foreach (UrlAlternativo urlAlternativo in URLAlternativos)
+                    {
+                        urlAlternativo.CapituloID = capitulo.ID;
+                        db.UrlAlternativo.Add(urlAlternativo);
+                    }
                 }
+
 
                 db.SaveChanges();
             }

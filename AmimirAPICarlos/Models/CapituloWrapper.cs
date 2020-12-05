@@ -10,4 +10,7 @@ namespace AmimirAPICarlos.Models
         public Capitulo Capitulo { get; set; }
         public List<UrlAlternativo> urlAlternativos { get; set; }
     }
+
+ 
+
 }
