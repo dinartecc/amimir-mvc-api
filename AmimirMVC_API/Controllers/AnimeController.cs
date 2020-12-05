@@ -16,6 +16,7 @@ namespace AmimirMVC_API.Controllers
     public class AnimeController : Controller
     {
         private string baseURL = "https://localhost:44300";
+        private string basePath = "/";
         HttpClient httpClient = new HttpClient();
 
 
@@ -34,13 +35,13 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            string responseGenero = httpClient.GetAsync("/api/Generos").Result.Content.ReadAsStringAsync().Result;
+            string responseGenero = httpClient.GetAsync(basePath +"api/Generos").Result.Content.ReadAsStringAsync().Result;
             ViewBag.Generos = JsonConvert.DeserializeObject<List<GeneroCLS>>(responseGenero);
-            string responseEstudio = httpClient.GetAsync("/api/Estudios").Result.Content.ReadAsStringAsync().Result;
+            string responseEstudio = httpClient.GetAsync(basePath + "api/Estudios").Result.Content.ReadAsStringAsync().Result;
             ViewBag.Estudios = JsonConvert.DeserializeObject<List<EstudioCLS>>(responseEstudio);
-            string responseEstado = httpClient.GetAsync("/api/Estados").Result.Content.ReadAsStringAsync().Result;
+            string responseEstado = httpClient.GetAsync(basePath + "api/Estados").Result.Content.ReadAsStringAsync().Result;
             ViewBag.Estados = JsonConvert.DeserializeObject<List<EstadoCLS>>(responseEstado);
-            string responseActor = httpClient.GetAsync("/api/Actores").Result.Content.ReadAsStringAsync().Result;
+            string responseActor = httpClient.GetAsync(basePath + "api/Actores").Result.Content.ReadAsStringAsync().Result;
             ViewBag.Actores = JsonConvert.DeserializeObject<List<ActorCLS>>(responseActor);
 
             return View();
@@ -60,7 +61,7 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            HttpResponseMessage response = httpClient.GetAsync("/api/Animes").Result;
+            HttpResponseMessage response = httpClient.GetAsync(basePath + "api/Animes").Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -121,7 +122,7 @@ namespace AmimirMVC_API.Controllers
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync("/api/Animes", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(basePath + "api/Animes", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -138,7 +139,7 @@ namespace AmimirMVC_API.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = httpClient.PutAsync($"/api/Animes/{ID}", body).Result;
+                    HttpResponseMessage response = httpClient.PutAsync($"{basePath}api/Animes/{ID}", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
@@ -181,7 +182,7 @@ namespace AmimirMVC_API.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
-                HttpResponseMessage response = httpClient.DeleteAsync($"/api/Animes/{ID}").Result;
+                HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}api/Animes/{ID}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(

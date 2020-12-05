@@ -5,7 +5,8 @@ using System.Web;
 
 namespace AmimirMVC_API.Models
 {
-    public class Token
+    [Serializable()]
+    public partial class Token
     {
         public string AccessToken { get; set; }
         public DateTime ExpiresAt { get; set; }

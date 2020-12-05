@@ -18,6 +18,7 @@ namespace AmimirMVC_API.Controllers
         // GET: Authentication
 
         private string baseURL = "https://localhost:44300";
+        private string basePath = "/";
         public ActionResult Index()
         {
             var xd = Session["token"];
@@ -46,7 +47,7 @@ namespace AmimirMVC_API.Controllers
             string stringData = JsonConvert.SerializeObject(user);
             var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = client.PostAsync("/api/Token", contentData).Result;
+            HttpResponseMessage response = client.PostAsync(basePath + "api/Token", contentData).Result;
 
             string stringJWT = response.Content.ReadAsStringAsync().Result;
 

@@ -311,17 +311,28 @@
                     data: req,
                     dataType: 'json'
                 }).done(function (response) {
-                    updateRows()
-                    Swal.fire({
-                        title: '¡Éxito!',
-                        icon: 'success',
-                        text: response.message,
-                        showCloseButton: 'true',
-                        closeButtonText: 'Cerrar'
-                    })
-                        .then(function () {
-                            $("#modal").addClass("hidden")
+                    if (response.success) {
+                        updateRows()
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            icon: 'success',
+                            text: response.message,
+                            showCloseButton: 'true',
+                            closeButtonText: 'Cerrar'
                         })
+                            .then(function () {
+                                $("#modal").addClass("hidden")
+                            })
+                    }
+                    else {
+                        Swal.fire({
+                            title: '¡Ha ocurrido un error!',
+                            icon: 'error',
+                            text: response.message,
+                            showCloseButton: 'true',
+                            closeButtonText: 'Cerrar'
+                        })
+                    }
                 }).fail(function (response) {
                     Swal.fire({
                         title: 'Ha ocurrido un error!',
@@ -349,17 +360,28 @@
                 data: { id: id },
                 dataType: 'json'
             }).done(function (response) {
-                updateRows()
-                Swal.fire({
-                    title: '¡Éxito!',
-                    icon: 'success',
-                    text: response.message,
-                    showCloseButton: 'true',
-                    closeButtonText: 'Cerrar'
-                })
-                    .then(function () {
-                        $("#modal").addClass("hidden")
+                if (response.success) {
+                    updateRows()
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        icon: 'success',
+                        text: response.message,
+                        showCloseButton: 'true',
+                        closeButtonText: 'Cerrar'
                     })
+                        .then(function () {
+                            $("#modal").addClass("hidden")
+                        })
+                }
+                else {
+                    Swal.fire({
+                        title: '¡Ha ocurrido un error!',
+                        icon: 'error',
+                        text: response.message,
+                        showCloseButton: 'true',
+                        closeButtonText: 'Cerrar'
+                    })
+                }
             }).fail(function (response) {
                 Swal.fire({
                     title: 'Ha ocurrido un error!',
