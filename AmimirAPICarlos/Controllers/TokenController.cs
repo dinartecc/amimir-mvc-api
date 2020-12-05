@@ -64,6 +64,10 @@ namespace AmimirAPICarlos.Controllers
             {
                 return Unauthorized();
             }
+            if (fullToken.ExpiresAt < DateTime.Now)
+            {
+                return Unauthorized();
+            }
 
             var usuario = db.Usuario.Find(fullToken.ClientID);
 
@@ -128,7 +132,7 @@ namespace AmimirAPICarlos.Controllers
 
             var oldRefresh = db.RefreshToken.Find(user.ID, sha256(ClientSecret));
 
-            if (oldRefresh != null)
+            if (oldRefresh != null && oldRefresh.ExpiresAt < DateTime.Now)
             {
                 try
                 {
@@ -163,13 +167,22 @@ namespace AmimirAPICarlos.Controllers
 
             var jwtTokenSerialized = tokenHandler.WriteToken(jwtSecurityToken);
 
-            var refreshToken = sha256($"{jwtTokenSerialized}{now}{secretKey}");
-
             RefreshTokenCLS refreshTokenCLS = new RefreshTokenCLS();
-            refreshTokenCLS.RefreshToken = refreshToken;
-            refreshTokenCLS.ClientID = user.ID;
-            refreshTokenCLS.ClientSecret = sha256(ClientSecret);
-            refreshTokenCLS.ExpiresAt = now.AddDays(Convert.ToInt32(rtExpireTime));
+
+            if (oldRefresh == null || oldRefresh.ExpiresAt < DateTime.Now)
+            {
+                var refreshToken = sha256($"{jwtTokenSerialized}{now}{secretKey}");
+
+                refreshTokenCLS.RefreshToken = refreshToken;
+                refreshTokenCLS.ClientID = user.ID;
+                refreshTokenCLS.ClientSecret = sha256(ClientSecret);
+                refreshTokenCLS.ExpiresAt = now.AddDays(Convert.ToInt32(rtExpireTime));
+            }
+            else
+            {
+                refreshTokenCLS = oldRefresh;
+            }
+            
 
             db.RefreshToken.Add(refreshTokenCLS);
             try
@@ -185,7 +198,7 @@ namespace AmimirAPICarlos.Controllers
             token.AccessToken = jwtTokenSerialized;
             token.ExpiresAt =  now.AddMinutes(Convert.ToInt32(expireTime));
             token.isAdmin = user.isAdmin;
-            token.RefreshToken = refreshToken;
+            token.RefreshToken = refreshTokenCLS.RefreshToken;
 
             return token;
         }
