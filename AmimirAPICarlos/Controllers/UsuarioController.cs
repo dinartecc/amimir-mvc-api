@@ -84,7 +84,7 @@ namespace AmimirAPICarlos.Controllers
             {
                 db.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateException)
             {
                 if (!UsuarioExists(id))
                 {
@@ -92,8 +92,12 @@ namespace AmimirAPICarlos.Controllers
                 }
                 else
                 {
-                    throw;
+                    return Conflict();
                 }
+            }
+            catch
+            {
+                return InternalServerError();
             }
 
             return StatusCode(HttpStatusCode.OK);
@@ -114,7 +118,19 @@ namespace AmimirAPICarlos.Controllers
             }
 
             db.Usuario.Add(usuario);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch(DbUpdateException)
+            {
+                return Conflict();
+            }
+            catch
+            {
+                return InternalServerError();
+            }
+            
 
             return CreatedAtRoute("DefaultApi", new { id = usuario.ID }, usuario);
         }

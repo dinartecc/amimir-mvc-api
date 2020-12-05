@@ -141,6 +141,15 @@ namespace AmimirMVC_API.Controllers
                     {
                         return RedirectToAction("Index", "Authentication");
                     }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        return Json(
+                                new
+                                {
+                                    success = false,
+                                    message = "Nombre de usuario ya existente"
+                                }, JsonRequestBehavior.AllowGet);
+                    }
                 }
                 else
                 {
@@ -152,6 +161,15 @@ namespace AmimirMVC_API.Controllers
                                 {
                                     success = true,
                                     message = "Usuario modificado satisfactoriamente"
+                                }, JsonRequestBehavior.AllowGet);
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                    {
+                        return Json(
+                                new
+                                {
+                                    success = false,
+                                    message = "Nombre de usuario ya existente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
                 }
