@@ -189,7 +189,7 @@ namespace AmimirMVC_API.Controllers
                             new
                             {
                                 success = true,
-                                message = "Usuario eliminado satisfactoriamente"
+                                message = "Estudio eliminado satisfactoriamente"
                             }, JsonRequestBehavior.AllowGet);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)

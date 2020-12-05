@@ -128,7 +128,7 @@ namespace AmimirMVC_API.Controllers
                                 new
                                 {
                                     success = true,
-                                    message = "Genero registrado satisfactoriamente",
+                                    message = "Género registrado satisfactoriamente",
                                 }, JsonRequestBehavior.AllowGet);
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -145,11 +145,11 @@ namespace AmimirMVC_API.Controllers
                                 new
                                 {
                                     success = true,
-                                    message = "Genero modificado satisfactoriamente"
+                                    message = "Género modificado satisfactoriamente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
                 }
-                throw new Exception("Error desconocido al guardar el actor");
+                throw new Exception("Error desconocido al guardar el género");
             }
             catch (Exception e)
             {
@@ -188,7 +188,7 @@ namespace AmimirMVC_API.Controllers
                             new
                             {
                                 success = true,
-                                message = "Actor eliminado satisfactoriamente"
+                                message = "Género eliminado satisfactoriamente"
                             }, JsonRequestBehavior.AllowGet);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -201,10 +201,10 @@ namespace AmimirMVC_API.Controllers
                        new
                        {
                            success = false,
-                           message = "Este actor tiene roles en animes"
+                           message = "Este género tiene roles en animes"
                        }, JsonRequestBehavior.AllowGet);
                 }
-                throw new Exception("Error desconocido al borrar el actor");
+                throw new Exception("Error desconocido al borrar el género");
             }
             catch (Exception e)
             {

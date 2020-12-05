@@ -23,31 +23,9 @@ namespace AmimirAPICarlos.Controllers
         int numberPage = 10;
 
         // GET: api/Estados
-        public IQueryable<Estado> GetEstado(int page = 1, string orderBy = "ID", string search = null, string searchBy = "Nombre")
+        public IQueryable<Estado> GetEstado()
         {
-            page = page - 1;
-
-            if (page < 0)
-            {
-                page = 0;
-            }
-
-            var results = db.Estado.OrderBy(orderBy).Skip(numberPage * page).Take(numberPage);
-           
-
-            if (search != null )
-            {
-               switch(searchBy)
-                {
-                    case "ID": results = results.Where(x => SqlFunctions.StringConvert((double)x.ID).Contains(searchBy));
-                        break;
-                    default: results = results.Where(x => x.Nombre.Contains(searchBy));
-                        break;
-                }
-            }
-
-            return results;
-
+            return db.Estado;
         }
 
         // GET: api/Estados/5

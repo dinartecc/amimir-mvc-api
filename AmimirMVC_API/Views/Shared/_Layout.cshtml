@@ -40,13 +40,14 @@
                     </div>
                     <nav class="hidden md:flex space-x-10">
                         @Html.ActionLink("Animes", "Index", "Anime", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
+                        @Html.ActionLink("Capítulos", "Index", "Capitulo", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
                         @Html.ActionLink("Estudios", "Index", "Estudio", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
                         @Html.ActionLink("Actores", "Index", "Actor", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
-                        @Html.ActionLink("Capítulos", "Index", "Capitulo", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
+                        @Html.ActionLink("Estados", "Index", "Estado", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
                         @Html.ActionLink("Géneros", "Index", "Genero", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
-                        @if(!(ViewBag.isAdmin == null || ViewBag.isAdmin == false))
+                        @if (!(ViewBag.isAdmin == null || ViewBag.isAdmin == false))
                         {
-                         @Html.ActionLink("Usuarios", "Index", "Usuario", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
+                            @Html.ActionLink("Usuarios", "Index", "Usuario", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
                         }
                         @Html.ActionLink("Paquetes", "Index", "Paquete", null, new { @class = "text-base font-medium text-gray-500 hover:text-gray-900" })
                     </nav>

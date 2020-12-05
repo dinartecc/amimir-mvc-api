@@ -2,11 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -14,7 +12,7 @@ using static AmimirMVC_API.Controllers.Utils;
 
 namespace AmimirMVC_API.Controllers
 {
-    public class ActorController : Controller 
+    public class EstadoController : Controller
     {
         private string baseURL = "https://localhost:44300";
         private string basePath = "/";
@@ -25,16 +23,16 @@ namespace AmimirMVC_API.Controllers
         public ActionResult Index()
         {
             Token token = HttpContext.Session["token"] as Token;
-            if (token == null )
+            if (token == null)
             {
                 return RedirectToAction("Index", "Authentication");
             }
 
-            
+
             if (token.ExpiresAt < DateTime.Now)
             {
                 var newToken = RefrescarToken(token);
-                if ( newToken.AccessToken == token.AccessToken )
+                if (newToken.AccessToken == token.AccessToken)
                 {
                     HttpContext.Session.Abandon();
                     return RedirectToAction("Index", "Authentication");
@@ -43,7 +41,7 @@ namespace AmimirMVC_API.Controllers
                 {
                     HttpContext.Session["token"] = newToken;
                 }
-                
+
             }
             else if (token.ExpiresAt.AddMinutes(-10) < DateTime.Now)
             {
@@ -69,7 +67,7 @@ namespace AmimirMVC_API.Controllers
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            HttpResponseMessage response = httpClient.GetAsync( basePath + "api/Actores").Result;
+            HttpResponseMessage response = httpClient.GetAsync(basePath + "api/Estados").Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -99,7 +97,7 @@ namespace AmimirMVC_API.Controllers
         }
 
         [HttpPost]
-        public ActionResult Guardar(ActorCLS actor)
+        public ActionResult Guardar(EstadoCLS estado)
         {
             Token token = HttpContext.Session["token"] as Token;
             if (token == null || token.ExpiresAt < DateTime.Now)
@@ -110,7 +108,7 @@ namespace AmimirMVC_API.Controllers
             try
             {
 
-                int ID = actor.ID ?? 0;
+                int ID = estado.ID;
 
                 HttpClient httpClient = new HttpClient();
                 httpClient.BaseAddress = new Uri(baseURL);
@@ -118,19 +116,19 @@ namespace AmimirMVC_API.Controllers
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-                string reqJson = JsonConvert.SerializeObject(actor);
+                string reqJson = JsonConvert.SerializeObject(estado);
                 HttpContent body = new StringContent(reqJson, Encoding.UTF8, "application/json");
 
                 if (ID == 0)
                 {
-                    HttpResponseMessage response = httpClient.PostAsync(basePath + "api/Actores", body).Result;
+                    HttpResponseMessage response = httpClient.PostAsync(basePath + "api/Estados", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
                                 new
                                 {
                                     success = true,
-                                    message = "Actor registrado satisfactoriamente",
+                                    message = "Estado creado satisfactoriamente",
                                 }, JsonRequestBehavior.AllowGet);
                     }
                     else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -140,18 +138,18 @@ namespace AmimirMVC_API.Controllers
                 }
                 else
                 {
-                    HttpResponseMessage response = httpClient.PutAsync($"{basePath}api/Actores/{ID}", body).Result;
+                    HttpResponseMessage response = httpClient.PutAsync($"{basePath}api/Estados/{ID}", body).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         return Json(
                                 new
                                 {
                                     success = true,
-                                    message = "Actor modificado satisfactoriamente"
+                                    message = "Estado modificado satisfactoriamente"
                                 }, JsonRequestBehavior.AllowGet);
                     }
                 }
-                throw new Exception("Error desconocido al guardar el actor");
+                throw new Exception("Error desconocido al guardar el estado");
             }
             catch (Exception e)
             {
@@ -183,14 +181,14 @@ namespace AmimirMVC_API.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
 
-                HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}api/Actores/{ID}").Result;
+                HttpResponseMessage response = httpClient.DeleteAsync($"{basePath}api/Estados/{ID}").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return Json(
                             new
                             {
                                 success = true,
-                                message = "Actor eliminado satisfactoriamente"
+                                message = "Estado eliminado satisfactoriamente"
                             }, JsonRequestBehavior.AllowGet);
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -203,10 +201,10 @@ namespace AmimirMVC_API.Controllers
                        new
                        {
                            success = false,
-                           message = "Este actor tiene animes asociados"
+                           message = "Este estado no puede ser borrado porque tiene animes asociados"
                        }, JsonRequestBehavior.AllowGet);
                 }
-                throw new Exception("Error desconocido al borrar el actor");
+                throw new Exception("Error desconocido al borrar estado");
             }
             catch (Exception e)
             {
@@ -218,9 +216,5 @@ namespace AmimirMVC_API.Controllers
                        }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
-
-
     }
 }
