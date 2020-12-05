@@ -318,10 +318,11 @@
   <EntityType Name="RefreshTokenCLS">
     <Key>
       <PropertyRef Name="ClientID" />
+      <PropertyRef Name="ClientSecret" />
     </Key>
     <Property Name="RefreshToken" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
     <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="ClientID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ClientID" Type="Int32" Nullable="false" />
     <Property Name="ClientSecret" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>

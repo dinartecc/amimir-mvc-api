@@ -22,9 +22,8 @@ namespace AmimirMVC_API.Controllers
         private string basePath = "/";
         public ActionResult Index()
         {
-            var xd = Session["token"];
             Token token = HttpContext.Session["token"] as Token;
-            if (token==null )
+            if ( token==null || token.ExpiresAt < DateTime.Now )
             {
                 ViewBag.IsLoggedIn = false;
                 ViewBag.IsAdmin = false;
@@ -48,7 +47,6 @@ namespace AmimirMVC_API.Controllers
             var request = new AuthReqCLS();
 
             request.user = user;
-            request.ClientID = ConfigurationManager.AppSettings["CLIENT_ID"];
             request.ClientSecret = ConfigurationManager.AppSettings["CLIENT_SECRET"];
 
             string stringData = JsonConvert.SerializeObject(request);

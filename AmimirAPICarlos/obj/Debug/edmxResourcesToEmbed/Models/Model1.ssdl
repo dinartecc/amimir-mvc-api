@@ -101,10 +101,11 @@
   <EntityType Name="RefreshToken">
     <Key>
       <PropertyRef Name="ClientID" />
+      <PropertyRef Name="ClientSecret" />
     </Key>
     <Property Name="RefreshToken" Type="varchar" MaxLength="256" Nullable="false" />
     <Property Name="ExpiresAt" Type="datetime" Nullable="false" />
-    <Property Name="ClientID" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ClientID" Type="int" Nullable="false" />
     <Property Name="ClientSecret" Type="varchar" MaxLength="256" Nullable="false" />
   </EntityType>
   <EntityType Name="UrlAlternativo">

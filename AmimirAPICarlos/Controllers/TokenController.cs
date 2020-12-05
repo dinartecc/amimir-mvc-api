@@ -19,9 +19,10 @@ namespace AmimirAPICarlos.Controllers
     {
         private AmimirEntities1 db = new AmimirEntities1();
         [HttpPost]
+        [Route("api/Token")]
         public IHttpActionResult Authenticate(AuthRequestCLS req)
         {
-            if (req == null || req.user == null || req.ClientID == null )
+            if (req == null || req.user == null || req.ClientSecret == null )
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
@@ -34,7 +35,7 @@ namespace AmimirAPICarlos.Controllers
 
             if (usuario != null)
             {
-                var token = GenerateJWT(usuario, req.ClientID, req.ClientSecret);
+                var token = GenerateJWT(usuario, req.ClientSecret);
 
                 return Ok(token);
             }
@@ -44,9 +45,70 @@ namespace AmimirAPICarlos.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("api/RefreshToken")]
+        public IHttpActionResult RefreshToken(RefRequestCLS req)
+        {
+            if (req == null || req.RefreshToken == null || req.ClientSecret == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
 
+            var secret = sha256(req.ClientSecret);
 
-        private Token GenerateJWT(Usuario user, string ClientID, string ClientSecret)
+            var fullToken = db.RefreshToken.Where(x => x.RefreshToken == req.RefreshToken && x.ClientSecret == secret).FirstOrDefault();
+
+            if ( fullToken == null )
+            {
+                return Unauthorized();
+            }
+
+            var usuario = db.Usuario.Find(fullToken.ClientID);
+
+            if( usuario == null || fullToken.ExpiresAt < DateTime.Now)
+            {
+                db.RefreshToken.Remove(fullToken);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    Console.WriteLine("Error al eliminar el token");
+                }
+                return Unauthorized();
+            }
+
+            var token = GenerateJWT(usuario, req.ClientSecret);
+
+            return Ok(token);
+        }
+
+        [HttpPost]
+        [Route("api/DeleteToken")]
+        public IHttpActionResult DeleteToken(RefRequestCLS req)
+        {
+            if (req == null || req.RefreshToken == null || req.ClientSecret == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            var fullToken = db.RefreshToken.Where(x => x.RefreshToken == req.RefreshToken && x.ClientSecret == sha256(req.ClientSecret)).FirstOrDefault();
+
+            
+            db.RefreshToken.Remove(fullToken);
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                Console.WriteLine("Error al eliminar el token");
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        private Token GenerateJWT(Usuario user, string ClientSecret)
         {
             var now = DateTime.Now;
 
@@ -57,7 +119,9 @@ namespace AmimirAPICarlos.Controllers
             var expireTime = ConfigurationManager.AppSettings["JWT_EXPIRE_MINUTES"];
             var rtExpireTime = ConfigurationManager.AppSettings["RT_EXPIRE_DAYS"];
 
-            var oldRefresh = db.RefreshToken.Find(ClientID);
+  
+
+            var oldRefresh = db.RefreshToken.Find(user.ID, sha256(ClientSecret));
 
             if (oldRefresh != null)
             {
@@ -98,8 +162,8 @@ namespace AmimirAPICarlos.Controllers
 
             RefreshTokenCLS refreshTokenCLS = new RefreshTokenCLS();
             refreshTokenCLS.RefreshToken = refreshToken;
-            refreshTokenCLS.ClientID = ClientID;
-            refreshTokenCLS.ClientSecret = ClientSecret;
+            refreshTokenCLS.ClientID = user.ID;
+            refreshTokenCLS.ClientSecret = sha256(ClientSecret);
             refreshTokenCLS.ExpiresAt = now.AddDays(Convert.ToInt32(rtExpireTime));
 
             db.RefreshToken.Add(refreshTokenCLS);

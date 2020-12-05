@@ -16,7 +16,7 @@ namespace AmimirAPICarlos.Models
     {
         public string RefreshToken { get; set; }
         public System.DateTime ExpiresAt { get; set; }
-        public string ClientID { get; set; }
+        public int ClientID { get; set; }
         public string ClientSecret { get; set; }
     }
 }
